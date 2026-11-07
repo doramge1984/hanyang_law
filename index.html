@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>법령 서재와 법령 비서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 레이아웃: 왼쪽 목차 + 본문 한 열. 법령집처럼 조문 번호를 단 섹션 */
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#18212e; --muted:#5b6676;
+  --line:#dde2ea; --accent:#0b4f9c; --accent-soft:#e7eff9;
+  --warn:#9a5b00; --warn-soft:#fff4e0; --ok:#1d7a46; --ok-soft:#e6f4ec;
+  --code-bg:#0f1722; --code-ink:#dbe4f0;
+  --display:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f141b; --paper:#161d27; --ink:#e6ebf2; --muted:#9aa6b6;
+    --line:#2a3442; --accent:#6aa8ef; --accent-soft:#16283f;
+    --warn:#f0b357; --warn-soft:#2e2414; --ok:#5cc58b; --ok-soft:#14291e;
+    --code-bg:#0a0f15; --code-ink:#d6e0ec; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --paper:#161d27; --ink:#e6ebf2; --muted:#9aa6b6;
+  --line:#2a3442; --accent:#6aa8ef; --accent-soft:#16283f;
+  --warn:#f0b357; --warn-soft:#2e2414; --ok:#5cc58b; --ok-soft:#14291e;
+  --code-bg:#0a0f15; --code-ink:#d6e0ec; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px}
+nav.toc{position:sticky;top:0;align-self:start;padding:32px 0;font-size:14px}
+nav.toc b{display:block;color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.04em;margin-bottom:8px}
+nav.toc a{display:block;padding:5px 0 5px 10px;border-left:2px solid var(--line);color:var(--muted);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);border-left-color:var(--accent)}
+main{padding:32px 0 80px;min-width:0}
+header.hero{padding:8px 0 28px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.eyebrow{font-size:13px;color:var(--muted);font-weight:500}
+h1{font-family:var(--display);font-size:clamp(28px,4vw,38px);line-height:1.25;margin:6px 0 12px;text-wrap:balance}
+h2{font-family:var(--display);font-size:24px;line-height:1.35;margin:0 0 14px;text-wrap:balance}
+h3{font-size:18px;margin:28px 0 10px}
+h4{font-size:16px;margin:20px 0 6px}
+p,li{max-width:68ch}
+.lead{font-size:17px;color:var(--muted);max-width:62ch}
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+.art{display:inline-block;font-family:var(--mono);font-size:13px;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:4px;margin-bottom:8px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.note{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0}
+.warn{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0}
+.ok{border-left:4px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0}
+.note p,.warn p,.ok p{margin:4px 0}
+.tablewrap{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--paper);font-size:15px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:600}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.pill.free{background:var(--ok-soft);color:var(--ok)}
+.pill.paid{background:var(--warn-soft);color:var(--warn)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+ol.steps>li{counter-increment:s;position:relative;padding:0 0 18px 44px;max-width:none}
+ol.steps>li::before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:600;font-size:14px;display:grid;place-items:center}
+:root[data-theme="dark"] ol.steps>li::before{color:#0f141b}
+ol.steps>li>b:first-child{display:block}
+.copybox{position:relative;margin:12px 0}
+.copybox pre{margin:0;background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:13.5px;line-height:1.6;padding:16px 18px;padding-top:40px;border-radius:8px;overflow-x:auto;white-space:pre}
+.copybox.wrapline pre{white-space:pre-wrap;word-break:break-all}
+.copybox .lbl{position:absolute;top:10px;left:16px;font-size:12px;color:#8fa1b8;font-family:var(--body)}
+.copybox button{position:absolute;top:8px;right:8px;font:600 13px var(--body);background:#24364d;color:#e6eef8;border:1px solid #3a5272;border-radius:6px;padding:4px 12px;cursor:pointer}
+.copybox button:hover{background:#2f4766}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.prompt{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+.prompt .who{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.prompt pre{white-space:pre-wrap;font-family:var(--body);font-size:15px;margin:0;line-height:1.65}
+.toolbtn.ghost{background:var(--paper);color:var(--accent);border:1px solid var(--line)}
+.ph{color:#ff7b7b;background:rgba(255,90,90,.18);font-weight:600;border-radius:3px;padding:0 2px}
+.preset{background:rgba(110,160,255,.18);border-radius:3px}
+.ph.filled{color:#7fe0a7;background:rgba(80,200,120,.18)}
+.segbtn{font:600 14px var(--body);background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.segbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.toolbtn{font:600 14px var(--body);background:var(--accent);color:#fff;border:0;border-radius:6px;padding:7px 14px;cursor:pointer}
+:root[data-theme="dark"] .toolbtn.ghost{background:var(--paper);color:var(--accent);border:1px solid var(--line)}
+.ph{color:#ff7b7b;background:rgba(255,90,90,.18);font-weight:600;border-radius:3px;padding:0 2px}
+.ph.filled{color:#7fe0a7;background:rgba(80,200,120,.18)}
+.toolbtn{color:#0f141b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .toolbtn.ghost{background:var(--paper);color:var(--accent);border:1px solid var(--line)}
+.ph{color:#ff7b7b;background:rgba(255,90,90,.18);font-weight:600;border-radius:3px;padding:0 2px}
+.ph.filled{color:#7fe0a7;background:rgba(80,200,120,.18)}
+.toolbtn{color:#0f141b}}
+mark{background:var(--warn-soft);color:var(--ink);padding:0 2px}
+ol.sub{margin:10px 0 0;padding-left:22px}
+ol.sub>li{margin:6px 0;max-width:none}
+ol.sub ul{margin:4px 0 4px;padding-left:20px}
+.prompt button{margin-top:8px;font:600 13px var(--body);background:var(--accent-soft);color:var(--accent);border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer}
+figure{margin:16px 0}
+figure img{max-width:100%;height:auto;display:block;border-radius:10px;background:#1b1f26;border:1px solid var(--line)}
+details.reveal{margin:12px 0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 16px}
+details.reveal>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0}
+figure.tall img{max-width:min(100%,560px)}
+figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0}
+.flow span{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px}
+.flow i{font-style:normal;color:var(--muted)}
+.stat{font-family:var(--display);font-size:34px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1}
+.src li{font-size:14px}
+footer{padding:28px 0;color:var(--muted);font-size:13px}
+@media (max-width:820px){.wrap{grid-template-columns:1fr;gap:0}nav.toc{position:static;padding:20px 0 0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.tabbar{display:flex;gap:6px;flex-wrap:wrap;max-width:1120px;margin:0 auto;padding:16px 20px 0;border-bottom:1px solid var(--line)}
+.tabbar .tab{font:inherit;font-size:15px;font-weight:600;padding:10px 16px;border:1px solid var(--line);border-bottom:none;border-radius:10px 10px 0 0;background:transparent;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.tabbar .tab.on{background:var(--bg);color:var(--accent);border-color:var(--line);border-bottom:1px solid var(--bg)}
+.tabbar .tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tabpanel[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="tabbar" role="tablist" aria-label="교안 탭">
+  <button type="button" role="tab" id="tb-tab1" aria-controls="tab1" aria-selected="true" class="tab on">① 법령 서재 · 법령 비서</button>
+  <button type="button" role="tab" id="tb-tab2" aria-controls="tab2" aria-selected="false" class="tab">② 안티그라비티: MCP 연결하고 만들기</button>
+</div>
+<div class="wrap tabpanel" id="tab1" role="tabpanel" aria-labelledby="tb-tab1">
+<nav class="toc" aria-label="목차">
+  <b>목차</b>
+  <a href="#why">제1조 왜 필요한가</a>
+  <a href="#compare">제2조 두 가지 방식</a>
+  <a href="#library">제3조 법령 서재</a>
+  <a href="#alpha">제3조의2 자동 갱신 문서</a>
+  <a href="#guide">제3조의3 노트북에 물어보기</a>
+  <a href="#gemini-direct">제3조의4 (선택) 제미나이 직접 연결</a>
+  <a href="#secretary">제4조 법령 비서</a>
+  <a href="#prompts">제5조 업무별 프롬프트</a>
+  <a href="#trouble">제6조 막힐 때</a>
+  <a href="#appendix">부칙 API 키·주의</a>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">HANYANG Gemini Academy · 교직원 실습 가이드 · 2026년 11월 8일 확인 기준</div>
+  <h1>우리 규정과 최신 법령을<br>AI로 함께 보는 두 가지 방법</h1>
+  <p class="lead">규정만 보는 일은 노트북으로 충분합니다. 오늘은 여기에 <b>지금 시행 중인 법령</b>과 <b>곧 바뀌는 법령</b>까지 붙여서, 규정·공고문이 법과 어긋나지 않는지 점검하는 방법을 실습합니다.</p>
+</header>
+
+<!-- 제1조 -->
+<section id="why">
+  <span class="art">제1조</span>
+  <h2>왜 필요한가</h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="stat">28 / 72명</div>
+      <p>사전 설문에서 <b>"공고문·안내문이 우리 규정과 법령에 맞는지 점검하는 방법"</b>을 배우고 싶다고 고른 인원입니다.</p>
+    </div>
+    <div class="card">
+      <div class="stat">매주 1회</div>
+      <p>노동 관련 법 개정을 확인하는 업무가 실제로 있습니다. 지금은 뉴스 요약으로 받고 있어, <b>법제처 원문 기준</b>으로 바꾸면 정확도가 올라갑니다.</p>
+    </div>
+  </div>
+  <h3>법령은 생각보다 자주 바뀝니다</h3>
+  <p>실습 준비 중 Korean Law로 조회한 결과입니다(2026년 11월 8일 기준). 같은 법이라도 <b>현행본</b>과 <b>시행예정본</b>이 동시에 있습니다.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>법령</th><th>지금 시행 중</th><th>곧 시행되는 개정</th></tr></thead>
+    <tbody>
+      <tr><td>고등교육법</td><td class="num">법률 제21423호 · 2026. 9. 11. 시행</td><td>법률 제21654호 · <b>2026. 11. 20. 시행</b> 외</td></tr>
+      <tr><td>근로기준법</td><td class="num">2026. 10. 8. 시행본</td><td><b>2026. 12. 8.</b> · <b>12. 10.</b> 시행 개정 대기</td></tr>
+      <tr><td>최저임금법</td><td class="num">2020. 5. 26. 시행본</td><td>타법개정 · <b>2026. 12. 8.</b> 시행</td></tr>
+    </tbody>
+  </table></div>
+  <div class="warn"><p>공고문을 지금 쓰는데 시행일이 공고 기간 중간에 걸리면 어느 법을 따라야 할까요? 이런 판단을 놓치지 않게 도와주는 것이 오늘의 목표입니다. 최종 판단은 반드시 <a href="https://www.law.go.kr">국가법령정보센터</a> 원문과 소관 부서 확인을 거칩니다.</p></div>
+</section>
+
+<!-- 제2조 -->
+<section id="compare">
+  <span class="art">제2조</span>
+  <h2>두 가지 방식: 법령 서재와 법령 비서</h2>
+  <p>난이도가 아니라 <b>하는 일</b>이 다릅니다. 내 업무에 맞는 쪽을 고르세요. 둘 다 쓰셔도 됩니다.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>법령 서재 (제미나이 노트북 + α)</th><th>법령 비서 (설치형 AI)</th></tr></thead>
+    <tbody>
+      <tr><td><b>하는 일</b></td><td>최신 법령을 <b>늘 갖춰 두고</b> 내가 물어봄</td><td>바뀐 것을 <b>찾아서 알려 줌</b></td></tr>
+      <tr><td><b>어울리는 업무</b></td><td>규정 문의 응대, 공고문·안내문 점검</td><td>법 개정 모니터링, 주간 브리핑, 규정 개정 준비</td></tr>
+      <tr><td><b>법령 최신성</b></td><td>하루 1회 자동 갱신</td><td>질문할 때마다 실시간 조회</td></tr>
+      <tr><td><b>설치</b></td><td>없음 (웹)</td><td>안티그라비티 또는 클로드 데스크톱</td></tr>
+      <tr><td><b>무료 계정</b></td><td><span class="pill free">무료 가능</span> 학교 계정도 가능</td><td><span class="pill free">무료 가능</span> 개인 계정 권장</td></tr>
+    </tbody>
+  </table></div>
+  <p>두 방식 모두 법령은 같은 곳에서 가져옵니다. <b>Korean Law MCP</b>는 국가법령정보센터 Open API를 AI가 쓸 수 있게 감싼 공개 서버로, 법령 API 키 없이도 조회됩니다(2026. 11. 8. 확인).</p>
+</section>
+
+<!-- 제3조 -->
+<section id="library">
+  <span class="art">제3조</span>
+  <h2>법령 서재: 제미나이 노트북 + α</h2>
+  <div class="flow" aria-label="법령 서재 구조">
+    <span>한양대 규정 파일 (TXT·MD)</span><i>+</i>
+    <span>최신 법령 구글 문서 (매일 자동 갱신)</span><i>→</i>
+    <span>제미나이 노트북</span><i>→</i>
+    <span>"규정과 법령 대조해 줘"</span>
+  </div>
+
+  <h3>① 규정 노트북 만들기</h3>
+  <ol class="steps">
+    <li><b>새 노트북 만들기</b>NotebookLM(제미나이 노트북)에서 새 노트북을 만들고 이름을 "한양대 규정 + 최신 법령"으로 정합니다.</li>
+    <li><b>규정 파일 올리기</b>받아 둔 규정 TXT·MD 파일을 업로드합니다. 포털 규정집 주소는 로그인이 필요해서 웹사이트 소스로는 들어가지 않습니다.</li>
+    <li><b>규정이 잘 들어갔는지 확인</b>"직원 육아휴직과 병가 관련 조항을 규정명·조문 번호와 함께 표로 정리해 줘"라고 물어 조문 번호까지 나오면 성공입니다.</li>
+  </ol>
+
+  <h3>② 노트북 지침 먼저 넣기</h3>
+  <p>질문하기 전에 지침부터 넣어 둡니다. 그래야 이후의 모든 답이 <b>결론 → 근거 표 → 시행예정 → 확인할 것</b> 순서로 나오고, 규정과 법이 다를 때마다 <b>규정 차이 메모</b>가 붙습니다. 지침에 적힌 법령 출처(최신노동복무법령, 최신법인교원법령)는 다음 단계에서 만듭니다.</p>
+  <ol class="steps">
+    <li><b>채팅 설정 열기</b>노트북 오른쪽 위 <b>⋮ → 채팅 설정</b>을 누릅니다.
+      <figure><img src="img/18-chat-menu.png" alt="노트북 오른쪽 위 점 세 개 메뉴를 열어 채팅 설정을 가리킨 화면" style="max-width:min(100%,420px)"><figcaption>⋮ → 채팅 설정. 같은 메뉴의 '노트북 복사'는 나중에 교직원에게 나눠 줄 때 씁니다.</figcaption></figure></li>
+    <li><b>맞춤 지침 붙여넣기</b><b>맞춤</b>을 고르고 아래 지침을 붙여넣습니다. 대답 길이는 <b>기본값</b>을 권합니다. '길게'는 설명이 늘어지고, '짧게'는 표나 메모가 잘릴 수 있습니다.
+      <div class="copybox wrapline"><span class="lbl">노트북 맞춤 지침 · 약 850자 (최대 10,000자)</span><button type="button" data-copy="nb-guide">지침 복사</button><pre id="nb-guide">너는 한양대학교 교직원의 규정·법령 검토와 문의 응대를 돕는 도우미다.
+
+[근거]
+- 학교 규정은 한양대 규정 출처에서만 찾는다.
+- 직원 관련 법령은 '최신노동복무법령', 교원·법인 관련 법령은 '최신법인교원법령' 출처에서만 찾는다.
+- 출처에 없는 내용은 추측하지 말고 '확인 필요'로 적는다. 일반 상식이나 외부 지식으로 채우지 않는다.
+
+[답변 순서]
+1. 결론을 두세 문장으로 먼저 쓴다. (가능 / 불가 / 규정 개정 필요 / 확인 필요)
+2. 근거를 표로 정리한다: 한양대 규정(규정명·조·항) | 관련 법 조문(법명·조·항) | 법 시행일 | 차이점·의견
+3. 법령에 '시행예정' 개정이 있으면 시행일과 함께 따로 알린다.
+4. 마지막에 담당자가 확인할 것을 1~3개 적는다.
+
+[주의]
+- 질문 대상이 직원인지 교원인지 먼저 구분한다. 직원은 노동 법령, 교원은 사립학교법 계열을 우선 근거로 쓴다. 구분이 안 되면 둘 다 짧게 안내하고 어느 쪽인지 되묻는다.
+- 조문 번호와 날짜는 출처에 적힌 그대로 쓴다.
+- 문의 답변 문구를 요청받으면 직원에게 바로 보낼 수 있는 존댓말 3~4문장으로 쓰고, 근거 규정명을 한 줄 덧붙인다.
+
+[규정 차이 메모]
+답변 중 한양대 규정과 최신 법령이 다르거나, 법 개정이 규정에 반영되지 않은 부분을 발견하면
+답변 맨 끝에 아래 형식으로 따로 적는다. 차이가 없으면 이 칸은 쓰지 않는다.
+
+■ 규정 차이 메모
+- 발견일: (오늘 날짜)
+- 계기가 된 문의: (한 줄 요약)
+- 한양대 규정: 규정명 제○조 제○항
+- 관련 법령: 법명 제○조 (시행일)
+- 차이: (한두 문장)
+- 시급도: 높음(이미 시행 중) / 보통(시행예정) / 낮음(표현 정비)</pre></div>
+      <figure><img src="img/19-chat-settings.png" alt="채팅 설정 창에서 맞춤을 고르고 지침을 붙여넣어 844자로 표시되고 대답 길이는 기본값인 화면"><figcaption>맞춤 선택 → 지침 붙여넣기 → 저장</figcaption></figure></li>
+    <li><b>저장 후 짧게 물어보기</b>이제 프롬프트를 길게 쓰지 않아도 됩니다.</li>
+  </ol>
+
+  <h3>③ 법령은 왜 웹사이트로 넣으면 안 될까요</h3>
+  <p>노트북에 넣은 웹페이지·PDF·업로드 파일은 <b>넣은 순간의 사진</b>입니다. 법령 페이지가 나중에 바뀌어도 노트북 속 내용은 그대로입니다. 반면 <b>구글 문서·시트·슬라이드</b>는 원본이 바뀌면 노트북도 따라 바뀝니다. 2026년 5월부터 적용된 자동 동기화 기능입니다.</p>
+  <figure>
+    <img src="sync.gif" width="720" height="320" alt="구글 문서 아이콘과 노트북 아이콘 사이에서 동기화 화살표가 도는 애니메이션">
+    <figcaption>구글 문서가 바뀌면 노트북 소스도 자동으로 맞춰집니다. 출처: Google Workspace Updates 블로그(2026. 5.)</figcaption>
+  </figure>
+  <p>그래서 <b>"최신 법령을 매일 구글 문서에 덮어쓰는 작은 프로그램(α)"</b>을 하나 두면, 노트북은 언제나 최신 법령을 갖게 됩니다.</p>
+</section>
+
+<!-- 제3조의2 -->
+<section id="alpha">
+  <span class="art">제3조의2</span>
+  <h2>α: 최신 법령을 매일 채워 주는 구글 문서</h2>
+  <p>법령을 너무 많이 넣으면 AI가 엉뚱한 조문을 근거로 끌어올 수 있습니다. 그래서 <b>주제별로 문서 1개씩</b> 나눕니다. 노동법만 쓰려면 ①만 만들면 됩니다.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>구글 문서</th><th>코드의 <code>LAWS</code>에 넣을 법령</th><th><code>TITLE</code></th></tr></thead>
+    <tbody>
+      <tr><td>① 노동·복무 법령</td><td>근로기준법, 최저임금법, 남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률, 기간제 및 단시간근로자 보호 등에 관한 법률</td><td>노동·복무 법령</td></tr>
+      <tr><td>② 학사·등록금 법령</td><td>고등교육법, 고등교육법 시행령, 대학 등록금에 관한 규칙</td><td>학사·등록금 법령</td></tr>
+      <tr><td>③ 법인·교원 법령</td><td>사립학교법, 사립학교법 시행령</td><td>법인·교원 법령</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><p><b>문서 하나에 스크립트 하나.</b> 각 문서에서 확장 프로그램 → Apps Script를 열어 같은 코드를 붙이고, <code>DOC_ID</code>·<code>TITLE</code>·<code>LAWS</code> 세 칸만 그 문서에 맞게 바꿉니다. 노동법만 쓸 거라면 ① 문서 하나만 만들면 됩니다. 코드의 기본값이 노동·복무 법령입니다.</p></div>
+
+  <h3>설치 순서 (약 10분)</h3>
+  <ol class="steps">
+    <li><b>빈 구글 문서 만들기</b>브라우저 주소창에 <a href="https://doc.new"><code>doc.new</code></a>를 입력하면 새 구글 문서가 바로 열립니다. 이름을 <b>"최신노동복무법령"</b>으로 정합니다. 이 이름이 노트북의 출처 이름이 되고, 질문할 때 이 이름으로 부릅니다. 법령 서재로 쓸 계정에 로그인된 상태인지 먼저 확인하세요. 그다음 주소창의 링크 전체를 복사합니다.
+      <figure><img src="img/09-doc.png" alt="doc.new로 만든 빈 구글 문서에 최신노동복무법령이라는 제목을 붙인 화면"><figcaption>문서 제목을 정하고, 주소창의 링크를 복사해 둡니다.</figcaption></figure></li>
+    <li><b>Apps Script 열기</b>방금 만든 문서 메뉴에서 <b>확장 프로그램 → Apps Script</b>를 누릅니다. 같은 계정으로 바로 열립니다. 기본으로 들어 있는 <code>function myFunction() {...}</code>는 모두 지웁니다.
+      <figure><img src="img/10-appsscript.png" alt="구글 문서 상단 확장 프로그램 메뉴를 열어 Apps Script를 가리킨 화면"><figcaption>문서 메뉴의 확장 프로그램 → Apps Script</figcaption></figure></li>
+    <li><b>코드 붙여넣기</b>아래 코드를 복사해 붙여넣고, <code>여기에_문서_링크_또는_ID</code> 자리에 <b>빨간색</b>으로 표시된 칸입니다. 아래 <b>문서 ID 변환기</b>에 링크를 붙여넣고 <b>코드에 ID 넣기</b>를 누르면 그 칸이 내 문서 ID로 바뀌어 초록색이 됩니다. 그다음 <b>코드 복사</b>를 눌러 붙여넣고 저장합니다. 직접 고칠 때는 링크 전체를 넣어도 코드가 알아서 ID를 꺼냅니다. 왼쪽 위 <b>제목 없는 프로젝트</b>를 눌러 이름을 <code>노동법령자동갱신</code>처럼 문서에 맞게 바꿔 두면, 권한 승인 화면과 내 프로젝트 목록에서 알아보기 쉽습니다.</li>
+    <li><b>저장하고 한 번 실행하기</b>
+      <figure><img src="img/11-editor.png" alt="Apps Script 편집기에 코드를 붙여넣은 직후, 위쪽에 저장되지 않은 변경사항과 함수 없음이 표시된 화면"><figcaption>붙여넣은 직후에는 "저장되지 않은 변경사항"이 뜨고, 실행 버튼 옆이 "함수 없음"으로 보입니다.</figcaption></figure>
+      <ol class="sub">
+        <li><b>저장하기:</b> Ctrl+S를 누르거나 툴바의 저장(💾) 아이콘을 누릅니다. 저장되면 "함수 없음" 자리에 함수 이름이 나타납니다.</li>
+        <li><b>함수 고르기:</b> 그 칸을 눌러 <code>updateLaws</code>를 고릅니다.</li>
+        <li><b>실행하기:</b> <b>▶ 실행</b>을 누릅니다. 처음에는 권한 창이 뜹니다.
+          <ul>
+            <li><b>권한 검토</b> → 계정 선택</li>
+            <li>"Google에서 확인하지 않은 앱" 화면 → 왼쪽 아래 <b>고급</b> → <b>노동법령자동갱신(으)로 이동(안전하지 않음)</b> → <b>허용</b></li>
+          </ul>
+          내가 만든 스크립트라서 나오는 정상적인 경고입니다. 학교 계정은 관리자 정책에 따라 이 단계에서 막힐 수 있습니다.</li>
+        <li><b>확인하기:</b> 아래쪽 실행 로그에 "노동·복무 법령 완료: OO초"가 뜰 때까지 기다립니다. 근로기준법이 길어서 1~2분 걸릴 수 있습니다.
+          <figure><img src="img/12-log.png" alt="실행 로그에 실행이 시작됨, 노동·복무 법령 완료 27.349초, 실행이 완료됨이 표시된 화면"><figcaption>강사 리허설 결과: 노동·복무 법령 4개를 약 27초 만에 채웠습니다.</figcaption></figure></li>
+      </ol></li>
+    <li><b>문서 확인</b>구글 문서를 열어 법령명, [현행] 시행일, 🔜 시행예정 표시, 조문이 들어왔는지 봅니다.
+      <figure><img src="img/13-filled.png" alt="구글 문서에 최신 노동·복무 법령 제목, 마지막 갱신 시각, 근로기준법의 현행 시행일과 시행예정 개정 3건, 조문이 채워진 화면"><figcaption>법령마다 제목이 붙어 왼쪽 문서 개요에서 바로 이동할 수 있습니다. 근로기준법에는 12월·내년 시행예정 개정이 함께 표시됩니다.</figcaption></figure></li>
+    <li><b>매일 자동 실행 등록</b>함수 목록에서 <code>setDailyTrigger</code>를 한 번 실행하면 매일 오전 6시 무렵 이 문서가 갱신됩니다. 시각은 코드의 <code>HOUR</code>로 바꿀 수 있습니다.
+      <figure><img src="img/14-trigger.png" alt="Apps Script 함수 선택 칸을 열어 setDailyTrigger를 고르고 실행 버튼을 누르는 화면"><figcaption>함수 칸에서 setDailyTrigger를 고르고 ▶ 실행을 한 번만 누릅니다. 왼쪽 ⏰ 트리거 메뉴에 updateLaws가 매일 실행으로 등록되면 끝입니다.</figcaption></figure>
+      <figure><img src="img/15-trigger-list.png" alt="Apps Script 트리거 메뉴에 updateLaws 함수가 시간 기반 이벤트로 등록된 목록 화면"><figcaption>왼쪽 ⏰ 트리거 메뉴. 이벤트 "시간 기반", 함수 "updateLaws"가 보이면 매일 자동 갱신이 켜진 것입니다. 최종 실행은 다음 날 아침 첫 자동 실행 뒤에 채워지고, 오류율이 0%면 정상입니다.</figcaption></figure></li>
+    <li><b>노트북에 추가</b>노트북에서 소스 추가 → <b>Google Drive</b>를 골라 이 문서를 넣습니다. 파일을 내려받아 업로드하면 자동 동기화가 되지 않습니다.
+      <figure><img src="img/16-notebook-add.png" alt="노트북의 소스 추가 창에서 Google Drive 항목 선택으로 최신노동복무법령 문서를 고르고 삽입 버튼을 누르는 화면"><figcaption>+ 소스 → Google Drive → 문서 선택 → 삽입. 왼쪽 출처 목록에 규정 파일들과 함께 들어갑니다.</figcaption></figure></li>
+  </ol>
+
+  <div class="card" id="idtool">
+    <h4 style="margin-top:0">문서 ID 변환기</h4>
+    <div style="font-size:14px;color:var(--muted)">① 어떤 법령 문서인가요?</div>
+    <div class="seg" role="group" aria-label="법령 문서 종류" style="display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px">
+      <button type="button" class="segbtn on" data-preset="labor">노동·복무</button>
+      <button type="button" class="segbtn" data-preset="corp">법인·교원</button>
+      <button type="button" class="segbtn" data-preset="academic">학사·등록금</button>
+    </div>
+    <p id="preset-msg" style="font-size:13px;color:var(--muted);margin:-6px 0 12px">문서 이름: <b>최신노동복무법령</b> · Apps Script 이름: <b>노동법령자동갱신</b> · 매일 6시 갱신</p>
+    <label for="doc-link" style="font-size:14px;color:var(--muted)">② 구글 문서 링크를 붙여넣으세요</label>
+    <input id="doc-link" type="text" inputmode="url" autocomplete="off" placeholder="https://docs.google.com/document/d/…/edit?tab=t.0" style="width:100%;margin:6px 0 10px;padding:10px 12px;font:15px var(--mono);border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+    <div style="font-size:14px;color:var(--muted)">뽑아낸 문서 ID</div>
+    <div id="doc-id" style="font:15px var(--mono);word-break:break-all;padding:10px 12px;margin:6px 0 10px;border-radius:8px;background:var(--accent-soft);min-height:44px">링크를 붙여넣으면 여기에 나타납니다</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button type="button" id="insert-id" class="toolbtn">코드에 ID 넣기</button>
+      <button type="button" id="copy-id" class="toolbtn ghost">ID만 복사</button>
+    </div>
+    <p id="doc-msg" style="font-size:13px;color:var(--muted);margin:8px 0 0"></p>
+    <details style="margin-top:12px">
+      <summary style="cursor:pointer;font-weight:600">어떻게 ID만 골라낼까요?</summary>
+      <p>구글 문서 링크는 늘 같은 틀입니다.</p>
+      <p style="font-family:var(--mono);font-size:14px;word-break:break-all">docs.google.com/document/<b>d</b>/<mark>1AbCdEfG…XyZ12</mark>/edit?tab=t.0</p>
+      <p><code>/d/</code>는 "다음 칸이 문서 번호"라는 표시이고, 다음 <code>/</code>가 나오기 전까지가 문서 ID입니다. 뒤의 <code>/edit</code>는 편집 화면, <code>?tab=t.0</code>은 첫 번째 탭을 뜻하는 화면 정보라서 문서를 찾는 데는 필요 없습니다.</p>
+      <p>변환기는 링크에서 <b>"/d/ 다음에 오는, 영문·숫자·밑줄(_)·하이픈(-)으로만 된 긴 글자 묶음"</b>을 찾습니다. 이런 글자 패턴 찾기 규칙을 <b>정규표현식</b>이라고 하며, 여기서는 <code>/\/d\/([A-Za-z0-9_-]{20,})/</code>를 씁니다. 구글 시트(<code>/spreadsheets/d/</code>)와 슬라이드(<code>/presentation/d/</code>) 링크도 같은 틀이라 그대로 됩니다.</p>
+      <p>Apps Script 코드 안에도 같은 규칙(<code>toDocId_</code> 함수)을 넣어 두어서, 링크 전체를 붙여넣어도 동작합니다.</p>
+    </details>
+  </div>
+
+  <div class="copybox">
+    <span class="lbl">Code.gs · Apps Script</span>
+    <button type="button" data-copy="code-gs">코드 복사</button>
+    <pre id="code-gs">/**
+ * 최신 법령 자동 갱신 → 이 구글 문서 → NotebookLM 자동 동기화
+ * - 문서 하나에 스크립트 하나. 노동법 문서에는 노동법 목록만 넣습니다.
+ * - 법령 출처: Korean Law MCP (국가법령정보센터 Open API 기반 공개 서버)
+ * - 법령 API 키 없이 동작합니다. 키가 생기면 아래 OC에 넣으세요(선택).
+ */
+
+// ===== 1. 여기만 고치세요 =====
+const CONFIG = {
+  DOC_ID: '<span class="ph" id="ph">여기에_문서_링크_또는_ID</span>',   // 이 문서의 주소창 링크를 통째로 붙여넣어도 됨
+  TITLE: <span id="ph-title">'노동·복무 법령'</span>,               // 문서 맨 위 제목에 쓰임
+  LAWS: [                                // 불러올 법령 (정식 명칭 그대로)
+<span id="ph-laws">    '근로기준법',
+    '최저임금법',
+    '남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률',
+    '기간제 및 단시간근로자 보호 등에 관한 법률'</span>
+  ],
+  // 다른 문서를 만들 때는 위 LAWS만 바꿔서 같은 코드를 씁니다.
+  //  학사·등록금: ['고등교육법', '고등교육법 시행령', '대학 등록금에 관한 규칙']
+  //  법인·교원:   ['사립학교법', '사립학교법 시행령']
+  HOUR: <span id="ph-hour">6</span>,                               // 매일 자동 갱신 시각 (0~23시)
+  OC: '',                                // (선택) 법령 API 인증키. 없으면 비워두기
+  BATCH: 25                              // 한 번에 가져올 조문 수 (바꾸지 않아도 됨)
+};
+const MCP_URL = 'https://korean-law-mcp.fly.dev/mcp';
+
+// ===== 2. 실행 함수 (위쪽 함수 선택 칸에서 고르기) =====
+// ① 지금 바로 법령 채우기
+function updateLaws() {
+  if (String(CONFIG.DOC_ID).indexOf('여기에') === 0) {
+    throw new Error('DOC_ID 칸에 이 문서의 링크나 ID를 먼저 넣어 주세요.');
+  }
+  const started = Date.now();
+  const doc = DocumentApp.openById(toDocId_(CONFIG.DOC_ID));
+  const body = doc.getBody();
+  body.clear();
+
+  const now = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyy-MM-dd HH:mm');
+  body.appendParagraph('최신 ' + CONFIG.TITLE + ' (자동 갱신)').setHeading(DocumentApp.ParagraphHeading.TITLE);
+  body.appendParagraph('마지막 갱신: ' + now + ' (한국 시간)\n' +
+    '출처: 국가법령정보센터 Open API (Korean Law MCP 경유)\n' +
+    '본문은 갱신 시점의 [현행] 기준입니다. "시행예정" 표시가 있으면 곧 바뀌는 조문이 있으니 원문을 확인하세요.');
+
+  CONFIG.LAWS.forEach(function (name) {
+    try {
+      writeLaw_(body, name);
+    } catch (e) {
+      body.appendParagraph('⚠ 「' + name + '」 불러오기 실패: ' + e.message);
+      Logger.log(name + ' 실패: ' + e.message);
+    }
+    if (Date.now() - started &gt; 5 * 60 * 1000) {      // Apps Script 6분 제한 대비
+      body.appendParagraph('⚠ 시간 제한으로 일부 법령을 건너뛰었습니다. 법령 수를 줄여 주세요.');
+      throw new Error('시간 초과');
+    }
+  });
+  doc.saveAndClose();
+  Logger.log(CONFIG.TITLE + ' 완료: ' + ((Date.now() - started) / 1000) + '초');
+}
+
+// ② 매일 자동 갱신 등록 (처음 한 번만 실행)
+function setDailyTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (t) { ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger('updateLaws').timeBased().everyDays(1).atHour(CONFIG.HOUR).inTimezone('Asia/Seoul').create();
+  Logger.log('매일 ' + CONFIG.HOUR + '시 무렵 자동 갱신을 등록했습니다.');
+}
+
+// ===== 3. 내부 함수 (고치지 않아도 됨) =====
+function writeLaw_(body, name) {
+  const info = findLaw_(name);
+  body.appendParagraph(name).setHeading(DocumentApp.ParagraphHeading.HEADING1);
+  body.appendParagraph('[현행] 공포 ' + fmt_(info.promulgated) + ' · 시행 ' + fmt_(info.effective) +
+    ' · 법령일련번호(MST) ' + info.mst);
+  info.upcoming.forEach(function (u) { body.appendParagraph('🔜 시행예정: ' + u); });
+
+  const articles = listArticles_(info.mst);
+  for (let i = 0; i &lt; articles.length; i += CONFIG.BATCH) {
+    const chunk = articles.slice(i, i + CONFIG.BATCH);
+    const text = callTool_('execute_tool', {
+      tool_name: 'get_batch_articles',
+      params: { mst: info.mst, articles: chunk }
+    });
+    text.split(/\n{2,}/).forEach(function (block) {
+      block = block.trim();
+      if (block.indexOf(name + '\n') === 0) block = block.slice(name.length + 1).trim();  // 맨 앞 법령명 줄 제거
+      if (!block || block === name) return;
+      body.appendParagraph(block);
+    });
+  }
+}
+
+function findLaw_(name) {
+  const text = callTool_('search_law', { query: name, display: 20 });
+  const exact = text.split('📂')[0];                    // 정확매칭 구역만
+  const m = exact.match(/MST:\s*(\d+)/);
+  if (!m) throw new Error('정확히 일치하는 현행 법령을 찾지 못했습니다. 정식 명칭을 확인하세요.');
+  const d = exact.match(/공포일:\s*(\d{8})\s*\/\s*시행일:\s*(\d{8})/) || [];
+  const upcoming = text.split('\n').filter(function (l) {
+    return l.indexOf('🔜') === 0 &amp;&amp; l.indexOf('「' + name + '」') &gt; -1;
+  }).map(function (l) {
+    return l.replace(/^🔜\s*「[^」]+」\s*/, '').replace(/\s*—\s*시행예정본 조문:.*$/, '');
+  });
+  return { mst: m[1], promulgated: d[1], effective: d[2], upcoming: upcoming };
+}
+
+function listArticles_(mst) {
+  const toc = callTool_('get_law_text', { mst: mst });
+  const list = [];
+  toc.split('\n').forEach(function (l) {
+    const m = l.match(/^(제\d+조(?:의\d+)?)(?:\s|$)/);
+    if (m &amp;&amp; list.indexOf(m[1]) === -1) list.push(m[1]);
+  });
+  if (!list.length) throw new Error('조문 목록을 읽지 못했습니다.');
+  return list;
+}
+
+function callTool_(tool, args) {
+  const url = MCP_URL + (CONFIG.OC ? '?oc=' + encodeURIComponent(CONFIG.OC) : '');
+  const payload = JSON.stringify({
+    jsonrpc: '2.0', id: Date.now(), method: 'tools/call',
+    params: { name: tool, arguments: args }
+  });
+  let lastErr;
+  for (let attempt = 1; attempt &lt;= 3; attempt++) {      // 서버가 잠깐 멈추면 재시도
+    try {
+      const res = UrlFetchApp.fetch(url, {
+        method: 'post', contentType: 'application/json', payload: payload,
+        headers: { Accept: 'application/json, text/event-stream' },
+        muteHttpExceptions: true
+      });
+      const raw = res.getContentText();
+      const json = parse_(raw);
+      if (json.error) throw new Error(json.error.message || '서버 오류');
+      const r = json.result || {};
+      const text = (r.content || []).map(function (c) { return c.text || ''; }).join('\n');
+      if (r.isError) throw new Error(text.slice(0, 150));
+      return text;
+    } catch (e) {
+      lastErr = e;
+      Utilities.sleep(2000 * attempt);
+    }
+  }
+  throw lastErr;
+}
+
+function parse_(raw) {
+  raw = raw.trim();
+  if (raw.charAt(0) === '{') return JSON.parse(raw);
+  const data = raw.split('\n').filter(function (l) { return l.indexOf('data:') === 0; })
+    .map(function (l) { return l.slice(5).trim(); });           // SSE 형식 대응
+  if (!data.length) throw new Error('응답을 읽을 수 없습니다: ' + raw.slice(0, 100));
+  return JSON.parse(data[data.length - 1]);
+}
+
+// 링크 전체가 들어와도 /d/ 뒤의 문서 ID만 꺼냄
+function toDocId_(s) {
+  s = String(s || '').trim();
+  const m = s.match(/\/d\/([a-zA-Z0-9_-]{20,})/);
+  return m ? m[1] : s;
+}
+
+function fmt_(d) {
+  d = String(d || '');
+  return d.length === 8 ? d.slice(0, 4) + '.' + d.slice(4, 6) + '.' + d.slice(6) : d;
+}
+</pre>
+  </div>
+
+  <div class="ok"><p><b>동작 확인:</b> 2026년 11월 8일 강사 리허설에서 구글 Apps Script로 끝까지 실행해, 노동·복무 법령 4개를 약 27초 만에 문서에 채우는 것을 확인했습니다. 학사·법인 문서용 법령 이름도 모두 정확히 검색되는 것을 확인했습니다.</p></div>
+
+
+  <h3 id="copy-doc">(심화) 법령 문서 하나 더 만들기: 법인·교원 법령</h3>
+  <p>교원 문의에 근로기준법으로 답하는 실수를 막으려면 사립학교법 문서를 하나 더 둡니다. 노동 문서를 만들 때와 <b>같은 순서를 한 번 더</b> 하면 됩니다. 다른 점은 변환기에서 <b>법인·교원</b>을 고르는 것뿐입니다.</p>
+  <ol class="steps">
+    <li><b>새 문서 만들기</b>주소창에 <a href="https://doc.new"><code>doc.new</code></a> → 이름을 <b>"최신법인교원법령"</b>으로 정하고 주소창 링크를 복사합니다.</li>
+    <li><b>코드 준비</b>아래 <b>법인·교원용 변환기</b>에 새 문서 링크를 붙여넣고 <b>코드에 ID 넣기</b> → <b>코드 복사</b>를 누릅니다. 제목·법령 목록(사립학교법, 사립학교법 시행령)·갱신 시각(7시)은 이미 들어 있습니다.
+      <div class="card" style="margin-top:10px">
+        <h4 style="margin-top:0">법인·교원용 문서 ID 변환기</h4>
+        <label for="doc-link2" style="font-size:14px;color:var(--muted)">'최신법인교원법령' 문서 링크를 붙여넣으세요</label>
+        <input id="doc-link2" type="text" inputmode="url" autocomplete="off" placeholder="https://docs.google.com/document/d/…/edit?tab=t.0" style="width:100%;margin:6px 0 10px;padding:10px 12px;font:15px var(--mono);border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+        <div style="font-size:14px;color:var(--muted)">뽑아낸 문서 ID</div>
+        <div id="doc-id2" style="font:15px var(--mono);word-break:break-all;padding:10px 12px;margin:6px 0 10px;border-radius:8px;background:var(--accent-soft);min-height:44px">링크를 붙여넣으면 여기에 나타납니다</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button type="button" id="insert-id2" class="toolbtn">코드에 ID 넣기</button>
+          <button type="button" id="copy-id2" class="toolbtn ghost">ID만 복사</button>
+        </div>
+        <p id="doc-msg2" style="font-size:13px;color:var(--muted);margin:8px 0 0"></p>
+        <div class="copybox" style="margin-top:12px">
+          <span class="lbl">Code.gs · 법인·교원 법령용</span>
+          <button type="button" data-copy="code-corp">코드 복사</button>
+          <pre id="code-corp" style="max-height:340px;overflow:auto">/**
+ * 최신 법령 자동 갱신 → 이 구글 문서 → NotebookLM 자동 동기화
+ * - 문서 하나에 스크립트 하나. 노동법 문서에는 노동법 목록만 넣습니다.
+ * - 법령 출처: Korean Law MCP (국가법령정보센터 Open API 기반 공개 서버)
+ * - 법령 API 키 없이 동작합니다. 키가 생기면 아래 OC에 넣으세요(선택).
+ */
+
+// ===== 1. 여기만 고치세요 =====
+const CONFIG = {
+  DOC_ID: '<span class="ph" id="ph2">여기에_문서_링크_또는_ID</span>',   // 이 문서의 주소창 링크를 통째로 붙여넣어도 됨
+  TITLE: '법인·교원 법령',               // 문서 맨 위 제목에 쓰임
+  LAWS: [                                // 불러올 법령 (정식 명칭 그대로)
+    '사립학교법',
+    '사립학교법 시행령'
+  ],
+  // 다른 문서를 만들 때는 위 LAWS만 바꿔서 같은 코드를 씁니다.
+  //  학사·등록금: ['고등교육법', '고등교육법 시행령', '대학 등록금에 관한 규칙']
+  //  법인·교원:   ['사립학교법', '사립학교법 시행령']
+  HOUR: 7,                               // 매일 자동 갱신 시각 (0~23시)
+  OC: '',                                // (선택) 법령 API 인증키. 없으면 비워두기
+  BATCH: 25                              // 한 번에 가져올 조문 수 (바꾸지 않아도 됨)
+};
+const MCP_URL = 'https://korean-law-mcp.fly.dev/mcp';
+
+// ===== 2. 실행 함수 (위쪽 함수 선택 칸에서 고르기) =====
+// ① 지금 바로 법령 채우기
+function updateLaws() {
+  if (String(CONFIG.DOC_ID).indexOf('여기에') === 0) {
+    throw new Error('DOC_ID 칸에 이 문서의 링크나 ID를 먼저 넣어 주세요.');
+  }
+  const started = Date.now();
+  const doc = DocumentApp.openById(toDocId_(CONFIG.DOC_ID));
+  const body = doc.getBody();
+  body.clear();
+
+  const now = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyy-MM-dd HH:mm');
+  body.appendParagraph('최신 ' + CONFIG.TITLE + ' (자동 갱신)').setHeading(DocumentApp.ParagraphHeading.TITLE);
+  body.appendParagraph('마지막 갱신: ' + now + ' (한국 시간)\n' +
+    '출처: 국가법령정보센터 Open API (Korean Law MCP 경유)\n' +
+    '본문은 갱신 시점의 [현행] 기준입니다. "시행예정" 표시가 있으면 곧 바뀌는 조문이 있으니 원문을 확인하세요.');
+
+  CONFIG.LAWS.forEach(function (name) {
+    try {
+      writeLaw_(body, name);
+    } catch (e) {
+      body.appendParagraph('⚠ 「' + name + '」 불러오기 실패: ' + e.message);
+      Logger.log(name + ' 실패: ' + e.message);
+    }
+    if (Date.now() - started &gt; 5 * 60 * 1000) {      // Apps Script 6분 제한 대비
+      body.appendParagraph('⚠ 시간 제한으로 일부 법령을 건너뛰었습니다. 법령 수를 줄여 주세요.');
+      throw new Error('시간 초과');
+    }
+  });
+  doc.saveAndClose();
+  Logger.log(CONFIG.TITLE + ' 완료: ' + ((Date.now() - started) / 1000) + '초');
+}
+
+// ② 매일 자동 갱신 등록 (처음 한 번만 실행)
+function setDailyTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (t) { ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger('updateLaws').timeBased().everyDays(1).atHour(CONFIG.HOUR).inTimezone('Asia/Seoul').create();
+  Logger.log('매일 ' + CONFIG.HOUR + '시 무렵 자동 갱신을 등록했습니다.');
+}
+
+// ===== 3. 내부 함수 (고치지 않아도 됨) =====
+function writeLaw_(body, name) {
+  const info = findLaw_(name);
+  body.appendParagraph(name).setHeading(DocumentApp.ParagraphHeading.HEADING1);
+  body.appendParagraph('[현행] 공포 ' + fmt_(info.promulgated) + ' · 시행 ' + fmt_(info.effective) +
+    ' · 법령일련번호(MST) ' + info.mst);
+  info.upcoming.forEach(function (u) { body.appendParagraph('🔜 시행예정: ' + u); });
+
+  const articles = listArticles_(info.mst);
+  for (let i = 0; i &lt; articles.length; i += CONFIG.BATCH) {
+    const chunk = articles.slice(i, i + CONFIG.BATCH);
+    const text = callTool_('execute_tool', {
+      tool_name: 'get_batch_articles',
+      params: { mst: info.mst, articles: chunk }
+    });
+    text.split(/\n{2,}/).forEach(function (block) {
+      block = block.trim();
+      if (block.indexOf(name + '\n') === 0) block = block.slice(name.length + 1).trim();  // 맨 앞 법령명 줄 제거
+      if (!block || block === name) return;
+      body.appendParagraph(block);
+    });
+  }
+}
+
+function findLaw_(name) {
+  const text = callTool_('search_law', { query: name, display: 20 });
+  const exact = text.split('📂')[0];                    // 정확매칭 구역만
+  const m = exact.match(/MST:\s*(\d+)/);
+  if (!m) throw new Error('정확히 일치하는 현행 법령을 찾지 못했습니다. 정식 명칭을 확인하세요.');
+  const d = exact.match(/공포일:\s*(\d{8})\s*\/\s*시행일:\s*(\d{8})/) || [];
+  const upcoming = text.split('\n').filter(function (l) {
+    return l.indexOf('🔜') === 0 &amp;&amp; l.indexOf('「' + name + '」') &gt; -1;
+  }).map(function (l) {
+    return l.replace(/^🔜\s*「[^」]+」\s*/, '').replace(/\s*—\s*시행예정본 조문:.*$/, '');
+  });
+  return { mst: m[1], promulgated: d[1], effective: d[2], upcoming: upcoming };
+}
+
+function listArticles_(mst) {
+  const toc = callTool_('get_law_text', { mst: mst });
+  const list = [];
+  toc.split('\n').forEach(function (l) {
+    const m = l.match(/^(제\d+조(?:의\d+)?)(?:\s|$)/);
+    if (m &amp;&amp; list.indexOf(m[1]) === -1) list.push(m[1]);
+  });
+  if (!list.length) throw new Error('조문 목록을 읽지 못했습니다.');
+  return list;
+}
+
+function callTool_(tool, args) {
+  const url = MCP_URL + (CONFIG.OC ? '?oc=' + encodeURIComponent(CONFIG.OC) : '');
+  const payload = JSON.stringify({
+    jsonrpc: '2.0', id: Date.now(), method: 'tools/call',
+    params: { name: tool, arguments: args }
+  });
+  let lastErr;
+  for (let attempt = 1; attempt &lt;= 3; attempt++) {      // 서버가 잠깐 멈추면 재시도
+    try {
+      const res = UrlFetchApp.fetch(url, {
+        method: 'post', contentType: 'application/json', payload: payload,
+        headers: { Accept: 'application/json, text/event-stream' },
+        muteHttpExceptions: true
+      });
+      const raw = res.getContentText();
+      const json = parse_(raw);
+      if (json.error) throw new Error(json.error.message || '서버 오류');
+      const r = json.result || {};
+      const text = (r.content || []).map(function (c) { return c.text || ''; }).join('\n');
+      if (r.isError) throw new Error(text.slice(0, 150));
+      return text;
+    } catch (e) {
+      lastErr = e;
+      Utilities.sleep(2000 * attempt);
+    }
+  }
+  throw lastErr;
+}
+
+function parse_(raw) {
+  raw = raw.trim();
+  if (raw.charAt(0) === '{') return JSON.parse(raw);
+  const data = raw.split('\n').filter(function (l) { return l.indexOf('data:') === 0; })
+    .map(function (l) { return l.slice(5).trim(); });           // SSE 형식 대응
+  if (!data.length) throw new Error('응답을 읽을 수 없습니다: ' + raw.slice(0, 100));
+  return JSON.parse(data[data.length - 1]);
+}
+
+// 링크 전체가 들어와도 /d/ 뒤의 문서 ID만 꺼냄
+function toDocId_(s) {
+  s = String(s || '').trim();
+  const m = s.match(/\/d\/([a-zA-Z0-9_-]{20,})/);
+  return m ? m[1] : s;
+}
+
+function fmt_(d) {
+  d = String(d || '');
+  return d.length === 8 ? d.slice(0, 4) + '.' + d.slice(4, 6) + '.' + d.slice(6) : d;
+}
+</pre>
+        </div>
+      </div></li>
+    <li><b>Apps Script에 붙여넣기</b>새 문서에서 <b>확장 프로그램 → Apps Script</b> → 기본 코드 지우고 붙여넣기 → 프로젝트 이름을 <code>법인교원법령자동갱신</code>으로 바꾸고 저장합니다.
+      <details class="reveal"><summary>화면 보기 (1장)</summary><figure><img src="img/23-corp-editor.png" alt="법인교원법령자동갱신 프로젝트에 코드를 붙여넣어 DOC_ID, 법인·교원 법령 제목, 사립학교법 목록, HOUR 7이 보이고 저장 아이콘을 가리킨 화면"><figcaption>프로젝트 이름, 새 문서 ID, 사립학교법 목록, 7시 갱신을 확인한 뒤 저장(💾)을 누릅니다.</figcaption></figure></details></li>
+    <li><b>실행·자동 갱신</b><code>updateLaws</code> 실행(권한 승인) → 문서 확인 → <code>setDailyTrigger</code> 한 번 실행.
+      <details class="reveal"><summary>화면 보기 (5장)</summary><figure><img src="img/24-corp-run.png" alt="저장이 끝나 함수 칸에 updateLaws가 선택되고 실행 버튼을 가리킨 화면"><figcaption>저장되면 함수 칸에 updateLaws가 나타납니다. 고른 상태에서 ▶ 실행.</figcaption></figure>
+      <figure><img src="img/25-corp-log.png" alt="실행 로그에 법인·교원 법령 완료 22.977초가 표시된 화면"><figcaption>강사 리허설: 사립학교법·시행령을 약 23초 만에 채웠습니다.</figcaption></figure>
+      <figure><img src="img/26-corp-doc.png" alt="최신법인교원법령 문서에 사립학교법 현행 시행일과 조문, 왼쪽 개요에 사립학교법과 사립학교법 시행령이 표시된 화면"><figcaption>문서 개요에 사립학교법·사립학교법 시행령이 생기고, 현행 시행일(2026. 10. 2.)과 조문이 채워졌습니다.</figcaption></figure>
+      <figure><img src="img/27-corp-trigger.png" alt="함수 칸에서 setDailyTrigger를 실행해 실행 로그에 매일 7시 무렵 자동 갱신을 등록했습니다가 표시된 화면"><figcaption>setDailyTrigger 실행 → "매일 7시 무렵 자동 갱신을 등록했습니다." 노동 문서(6시)와 시간이 겹치지 않습니다.</figcaption></figure>
+      <figure><img src="img/28-corp-trigger-list.png" alt="법인교원법령자동갱신 프로젝트의 트리거 메뉴에 updateLaws 시간 기반 트리거가 등록된 화면"><figcaption>⏰ 트리거 메뉴에 updateLaws · 시간 기반이 생기면 완료입니다.</figcaption></figure></details></li>
+    <li><b>노트북에 추가</b><b>+ 소스 → Google Drive → 최신법인교원법령 → 삽입</b>. 노트북 지침에는 이미 이 출처 이름이 들어 있습니다.
+      <details class="reveal"><summary>화면 보기 (1장)</summary><figure><img src="img/29-corp-notebook.png" alt="노트북 소스 추가 창에서 최신법인교원법령 문서를 고르고 삽입 버튼을 누르는 화면, 왼쪽 출처 목록 맨 위에 최신노동복무법령이 보임"><figcaption>최신법인교원법령 선택 → 삽입. 왼쪽 출처 목록에 먼저 넣은 최신노동복무법령이 보입니다.</figcaption></figure></details></li>
+  </ol>
+  <div class="note"><p>문서의 <b>사본 만들기</b>를 쓰면 Apps Script도 같이 복사되지만, 코드 속 문서 ID와 프로젝트 이름이 원본 그대로 따라와 헷갈리기 쉽습니다. 연수에서는 새 문서로 만드는 방법을 권합니다.</p></div>
+
+</section>
+
+
+<!-- 제3조의3 -->
+<section id="guide">
+  <span class="art">제3조의3</span>
+  <h2>노트북에 물어보기: 대조 점검, 문의 응대, 규정 개정 근거 쌓기</h2>
+  <p>제3조에서 넣은 지침과 제3조의2의 법령 문서가 갖춰졌으면, 이제 노트북에 물어봅니다. 문의에 답하다 보면 "규정은 이렇게 돼 있는데 법은 바뀌었네" 하는 순간이 계속 생기고, 지침 덕분에 그때마다 <b>규정 차이 메모</b>가 자동으로 붙습니다.</p>
+
+  <h3>① 규정과 최신 법령 대조 점검</h3>
+  <div class="note"><p><b>노트북에 함께 물어보기</b> 예시: "최신노동복무법령 문서와 한양대 규정을 비교해서, 직원 복무 규정 중 현행 법보다 불리하거나 개정이 필요한 조항을 [규정 조항 | 관련 법 조문 | 법 시행일 | 차이점 | 수정 제안] 표로 정리해 줘. 근거가 없으면 '확인 필요'로 표시해 줘."</p></div>
+  <h4>결과 예시: 육아휴직·출산휴가 규정 대조</h4>
+  <p>강사 리허설에서 노트북에 아래처럼 물었을 때의 결과입니다. 규정 조항과 법 조문을 짝지어, 법 시행일과 차이점을 표로 정리하고 각 칸에 출처 번호를 붙였습니다.</p>
+  <div class="prompt"><div class="who">리허설 질문</div><pre id="q-demo">최신노동복무법령 문서와 한양대 규정을 비교해서, 직원 육아휴직·출산휴가 관련 규정 중 현행 법과 다르거나 개정이 필요한 부분을 [규정 조항 | 관련 법 조문 | 법 시행일 | 차이점] 표로 정리해 줘. 근거가 없으면 '확인 필요'로 표시해 줘.</pre><button type="button" data-copy="q-demo">복사</button></div>
+  <details class="reveal"><summary>결과 화면 펼쳐 보기 (개정 필요 항목 9개)</summary>
+    <figure class="tall"><img src="img/17-result.png" alt="노트북이 한양대 직원인사·직원복무 규정과 남녀고용평등법·근로기준법 조문을 비교해 육아휴직 기간 연장, 단기 육아휴직, 배우자 출산휴가 등 개정 필요 항목 9개를 표로 정리한 결과"><figcaption>개정 필요 항목 9개가 정리되었고, 일부는 스스로 '확인 필요'로 표시했습니다.</figcaption></figure>
+  </details>
+  <div class="warn"><p><b>결과를 읽는 법:</b> 이 표는 <b>검토할 곳을 찾아 주는 초안</b>입니다. 각 칸의 출처 번호를 눌러 규정 원문과 법 조문을 직접 확인하고, 특히 '확인 필요'가 붙은 항목은 국가법령정보센터 원문과 소관 부서 확인을 거친 뒤에 개정안에 반영합니다.</p></div>
+
+  <h3>② 짧게 묻는 문의 응대</h3>
+  <div class="prompt"><div class="who">짧은 문의</div><pre id="q-short">직원이 배우자 출산휴가를 나눠 쓸 수 있는지 물어봤어</pre><button type="button" data-copy="q-short">복사</button></div>
+  <details class="reveal"><summary>결과 화면 펼쳐 보기 (결론 → 근거 표 → 시행예정 → 확인할 것 → 답변 문구 → 규정 차이 메모)</summary>
+    <figure class="tall"><img src="img/20-answer.png" alt="한 줄 문의에 노트북이 결론, 규정과 법령 비교 표, 시행예정 개정 안내, 담당자 확인 사항, 직원 안내용 답변 문구, 규정 차이 메모 순서로 답한 화면"><figcaption>한 줄 문의에 지침의 순서대로 답했고, 맨 끝에 규정 차이 메모가 붙었습니다.</figcaption></figure>
+  </details>
+  <h4>교원 문의도 확인해 보기</h4>
+  <p>법인·교원 문서까지 넣었다면, 교원 질문에는 근로기준법이 아니라 사립학교법 쪽을 근거로 답하는지 확인합니다.</p>
+  <div class="prompt"><div class="who">교원 문의</div><pre id="q-teacher">교원이 육아휴직을 쓰고 싶다고 문의했어</pre><button type="button" data-copy="q-teacher">복사</button></div>
+  <details class="reveal"><summary>결과 화면 펼쳐 보기 (2장)</summary>
+    <figure><img src="img/30-teacher.png" alt="출처 목록에 최신노동복무법령과 최신법인교원법령이 함께 있고, 교원 육아휴직 문의에 사립학교법과 학교법인 정관을 근거로 결론을 낸 화면"><figcaption>출처에 두 법령 문서가 함께 있어도, 교원 질문에는 사립학교법과 학교법인 정관을 근거로 답했습니다. 결론에서 "규정 개정 필요" 항목도 짚었습니다.</figcaption></figure>
+    <figure class="tall"><img src="img/31-teacher-full.png" alt="교원 육아휴직 문의 전체 답변: 결론, 학교법인 정관과 사립학교법 제59조 비교 표, 시행예정 없음, 담당자 확인 사항, 교원 안내 문구, 규정 차이 메모(시급도 높음)"><figcaption>전체 답변. 빨간 상자는 담당자가 먼저 볼 곳(법 시행일, 규정과 법의 차이점, 확인할 사항, 시급도), 파란 상자는 교원에게 바로 보낼 안내 문구입니다. 핵심 차이(근속기간 산입)를 강사가 원문으로 확인한 결과, 사립학교법 제59조 제3항에 "같은 호의 휴직기간은 근속기간에 포함"한다고 되어 있어 법 쪽 설명은 맞았습니다. 정관 쪽 내용은 정관 원문으로 따로 확인합니다.</figcaption></figure>
+  </details>
+  <div class="note"><p><b>직원·교원 구분 확인:</b> "육아휴직을 쓰고 싶다는 문의가 왔어"처럼 대상이 없는 질문을 넣어, 직원인지 교원인지 되묻는지도 확인해 보세요.</p></div>
+
+  <h3>③ 규정 차이 메모를 모아 개정 건의로</h3>
+  <ol class="steps">
+    <li><b>메모로 저장</b>답변 끝에 <b>■ 규정 차이 메모</b>가 나오면 그 답변을 노트북 <b>메모로 저장</b>합니다. 제목 앞머리를 <code>[차이] 배우자 출산휴가</code>처럼 통일하면 나중에 모으기 쉽습니다.</li>
+    <li><b>한 달에 한 번 모으기</b>쌓인 메모를 놓고 아래처럼 물어 규정 담당 부서에 넘길 표를 만듭니다. 같은 차이가 문의에서 여러 번 나왔다는 횟수가 개정을 설득하는 근거가 됩니다.</li>
+  </ol>
+  <div class="prompt"><div class="who">월간 정리</div><pre id="q-month">이번 달 [차이] 메모를 모두 모아서, 규정별로 묶고 시급도 순으로 정리한 '규정 개정 검토 요청' 표를 만들어 줘. 같은 내용이 여러 번 나왔으면 횟수도 적어 줘.</pre><button type="button" data-copy="q-month">복사</button></div>
+  <div class="warn"><p>메모의 발견일 같은 날짜는 AI가 적는 값이라 하루 정도 어긋날 수 있습니다. 개정 건의로 넘기기 전에 날짜와 조문 번호를 원문으로 한 번 더 확인하세요.</p></div>
+</section>
+
+
+<!-- 제3조의4 -->
+<section id="gemini-direct">
+  <span class="art">제3조의4</span>
+  <h2>(선택) 개인 유료 계정이라면: 제미나이에 Korean Law 직접 연결</h2>
+  
+  <p>제미나이 <b>개인 유료 계정</b>에서는 법령 MCP를 바로 붙일 수 있습니다. 무료·학교 계정에서는 이 메뉴가 열리지 않습니다(2026. 11. 8. 강사 확인).</p>
+  <ol class="steps">
+    <li><b>커넥터 화면 열기</b>제미나이(웹 또는 데스크톱 앱) 왼쪽 <b>더보기 → 맞춤설정</b>을 누르고 위쪽 <b>커넥터</b> 탭으로 갑니다.
+      <figure><img src="img/01-menu.png" alt="제미나이 왼쪽 더보기 메뉴에서 맞춤설정을 고르고 커넥터 탭이 열린 화면"><figcaption>더보기 → 맞춤설정 → 커넥터. 오른쪽 위에 <b>+ 맞춤</b> 버튼이 있습니다.</figcaption></figure></li>
+    <li><b>MCP 서버 주소 입력</b><b>+ 맞춤</b>을 누르면 "MCP 서버에 연결" 창이 뜹니다. 아래 주소를 붙여넣고 <b>다음</b>을 누릅니다. 추가 설정은 건드리지 않습니다.
+      <div class="copybox wrapline"><span class="lbl">MCP 서버 URL</span><button type="button" data-copy="url1">복사</button><pre id="url1">https://korean-law-mcp.fly.dev/mcp</pre></div>
+      <figure><img src="img/02-url.png" alt="MCP 서버에 연결 창의 URL 칸에 korean-law-mcp 주소를 입력한 화면"><figcaption>주소가 https://로 시작하는지 확인합니다.</figcaption></figure></li>
+    <li><b>도구 목록 확인 후 연결</b>"맞춤 앱 저장" 창에 <b>Korean Law</b>와 사용 가능한 작업(search_law, get_law_text 등 10개)이 보이면 <b>연결</b>을 누릅니다.
+      <figure><img src="img/03-tools.png" alt="맞춤 앱 저장 창에 Korean Law 이름과 search_law 등 사용 가능한 작업 10개가 표시된 화면"><figcaption>서버가 제공하는 도구가 정상적으로 불러와졌다는 뜻입니다.</figcaption></figure></li>
+    <li><b>연결된 앱에서 확인</b>커넥터 화면 맨 아래 <b>맞춤 앱</b>에 Korean Law가 생깁니다.
+      <figure><img src="img/04-connected.png" alt="연결된 앱 목록 맨 아래 맞춤 앱 영역에 Korean Law가 추가된 화면"><figcaption>맞춤 앱 영역에 Korean Law가 보이면 연결 완료입니다.</figcaption></figure></li>
+    <li><b>연결 테스트</b>새 채팅에서 <code>@Korean Law</code>로 부르고 조문과 최근 개정을 물어봅니다. 출처에 <b>국가법령정보센터</b>가 표시되면 정상입니다.
+      <figure><img src="img/05-test1.png" alt="Korean Law로 고등교육법 제2조 학교의 종류 조문을 조회한 결과 화면"><figcaption>"korean-law 커넥터로 고등교육법 제2조 현행 조문을 찾아줘"의 결과</figcaption></figure>
+      <figure><img src="img/06-test2.png" alt="고등교육법의 현행 최근 개정과 시행예정 개정을 나누어 보여 준 결과 화면"><figcaption>"고등교육법의 가장 최근 개정 법률번호, 공포일, 시행일"의 결과. 현행(9. 11. 시행)과 시행예정(11. 20. 시행)을 나눠 보여 줍니다. 국가법령정보센터 원문과 일치함을 확인했습니다.</figcaption></figure></li>
+  </ol>
+  <p>이후 규정 노트북을 함께 첨부하고 <code>@Korean Law</code>와 같이 질문하면, 한 채팅에서 규정과 최신 법령을 대조할 수 있습니다.</p>
+  <div class="note"><p>무료 제미나이 채팅에 이 주소를 붙여넣고 "여기서 찾아봐"라고 하면 동작하지 않습니다. MCP 주소는 웹페이지가 아니라 정해진 형식의 요청에만 답하는 연결 주소라서, 웹페이지처럼 열면 오류(405)만 돌아옵니다.</p></div>
+
+</section>
+
+<!-- 제4조 -->
+<section id="secretary">
+  <span class="art">제4조</span>
+  <h2>법령 비서: 설치형 AI + Korean Law</h2>
+  <p>설치형 AI는 질문할 때마다 법령을 <b>실시간으로</b> 조회하고, 결과를 내 컴퓨터 폴더에 기록으로 남길 수 있습니다. "지난주와 비교해 바뀐 것만" 같은 일이 가능해집니다.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>도구</th><th>무료 계정</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td><b>안티그라비티</b></td><td><span class="pill free">가능</span></td><td>무료 개인 요금제는 주간 사용 한도가 있음. 예약 작업(Automations) 기능 있음</td></tr>
+      <tr><td><b>클로드 데스크톱 (코워크)</b></td><td><span class="pill free">가능</span></td><td>무료 계정은 맞춤 커넥터 <b>1개</b>까지 → Korean Law를 그 1개로</td></tr>
+      <tr><td><b>챗GPT</b></td><td><span class="pill paid">유료만</span></td><td>맞춤 MCP는 개발자 모드(Plus 이상)에서만 연결 가능</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>A. 안티그라비티</h3>
+  <div class="card tabjump">
+    <p style="margin:0 0 10px">안티그라비티 실습은 <b>두 번째 탭</b>에 따로 정리했습니다. Korean Law 연결부터 <b>내 규정 MCP 만들기</b>까지 이어집니다.</p>
+    <button type="button" class="toolbtn" data-goto-tab="tab2">② 안티그라비티 탭으로 가기 →</button>
+  </div>
+
+  <h3>B. 클로드 데스크톱 (코워크)</h3>
+  <ol class="steps">
+    <li><b>설치·로그인</b>클로드 데스크톱 앱을 설치하고 로그인합니다. 무료 계정도 됩니다.</li>
+    <li><b>맞춤 커넥터 추가</b>설정(또는 맞춤설정) → <b>커넥터</b> → <b>맞춤 커넥터 추가</b> → 이름 <code>Korean Law</code>, URL은 아래 주소 → 추가.</li>
+    <li><b>규정 폴더 연결</b>코워크에서 규정 TXT·MD가 든 폴더를 작업 폴더로 고르면 규정은 파일로 읽고, 법령은 Korean Law로 조회합니다.</li>
+  </ol>
+  <div class="copybox wrapline"><span class="lbl">맞춤 커넥터 URL</span><button type="button" data-copy="url2">복사</button><pre id="url2">https://korean-law-mcp.fly.dev/mcp</pre></div>
+
+  <h3>C. 비서에게 맡길 주간 브리핑</h3>
+  <p>작업 폴더에 <code>법령브리핑_기록.md</code>라는 빈 파일을 하나 만들어 두고 아래처럼 시킵니다. 안티그라비티에서는 이 지시를 <b>예약 작업</b>으로 걸어 매주 금요일 오전에 돌릴 수 있습니다(무료 한도 안에서).</p>
+  <div class="prompt"><div class="who">주간 노동법 개정 브리핑</div><pre id="p-brief">Korean Law 도구만 사용해서 아래 법령의 [현행] 시행일과 '시행예정' 개정을 조회해 줘.
+- 근로기준법, 최저임금법, 남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률,
+  기간제 및 단시간근로자 보호 등에 관한 법률, 근로자퇴직급여 보장법
+
+작업 폴더의 법령브리핑_기록.md 에 적힌 지난 결과와 비교해서 새로 생긴 개정만 표로 정리해 줘.
+표: 법령 | 공포일 | 시행일 | 개정 구분 | 바뀐 조문(조회된 범위)
+그다음 오늘 날짜와 함께 이번 결과를 같은 파일 맨 아래에 덧붙여 줘.
+뉴스나 블로그는 근거로 쓰지 말고, 조회되지 않은 내용은 '확인 필요'로 적어 줘.</pre><button type="button" data-copy="p-brief">프롬프트 복사</button></div>
+
+  <h3>D. 제미나이 예약 (개인 유료 계정)</h3>
+  <p>제미나이에 Korean Law를 연결해 두었다면, 브리핑을 <b>예약</b>으로 걸 수 있습니다. 예약 메뉴에서 직접 만들어도 되고, 채팅에 "매주 금요일 오전 9시에 ~해 줘"라고 말해도 예약이 만들어집니다.</p>
+  <figure><img src="img/07-schedule.png" alt="제미나이 예약 화면에서 일일 노동법령 개정 브리핑 예약의 계획과 반복, 시간을 설정한 모습"><figcaption>왼쪽 메뉴의 <b>예약</b>. 계획(지시문), 반복, 시간을 정합니다.</figcaption></figure>
+  <figure><img src="img/08-weekly.png" alt="채팅에 매주 금요일 오전 9시 브리핑을 요청하자 주간 노동법령 개정 브리핑 예약이 만들어진 화면"><figcaption>채팅으로 요청해도 예약이 만들어지고, 아래에 Weekly 표시가 붙습니다.</figcaption></figure>
+  <p>예약은 실행할 때마다 새로 시작해서 지난 결과를 기억하지 못할 수 있습니다. 그래서 "지난주와 비교" 대신 <b>날짜 범위</b>로 지시하는 편이 안정적입니다. 매일 돌린다면 같은 개정이 반복되지 않도록 범위를 좁힙니다.</p>
+  <div class="prompt"><div class="who">매일 브리핑용 지시문</div><pre id="p-daily">@Korean Law 를 사용해서 근로기준법, 최저임금법, 남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률, 기간제 및 단시간근로자 보호 등에 관한 법률, 근로자퇴직급여 보장법을 조회해 줘.
+① 어제 또는 오늘 날짜로 공포된 개정
+② 오늘부터 7일 안에 시행되는 개정
+두 가지만 표로 정리해 줘. 표: [구분(공포/시행 임박) | 법령 | 공포일 | 시행일 | 주요 내용]
+웹 검색이나 뉴스는 근거로 쓰지 말고, Korean Law에서 조회된 내용만 써 줘. 해당 사항이 없으면 '오늘 변동 없음'이라고만 써 줘.</pre><button type="button" data-copy="p-daily">프롬프트 복사</button></div>
+  <div class="warn"><p>예약 실행 때도 Korean Law가 실제로 쓰이는지는 첫 실행 결과로 확인 중입니다(2026. 11. 13. 첫 주간 실행). 결과에 국가법령정보센터 출처가 보이는지 확인하세요.</p></div>
+</section>
+
+<!-- 제5조 -->
+<section id="prompts">
+  <span class="art">제5조</span>
+  <h2>업무별 프롬프트</h2>
+  <p>사전 설문에 적어 주신 업무를 바탕으로 만들었습니다. 법령 서재(노트북)와 법령 비서 어디에서나 쓸 수 있습니다. 모든 프롬프트 끝에 <b>"근거가 없으면 '확인 필요'로 표시하고 조문 번호를 함께 적어 줘"</b>를 붙이세요. 노트북에서는 법령을 <b>출처 이름(최신노동복무법령)</b>으로 부르면 AI가 엉뚱한 자료 대신 그 문서를 근거로 씁니다.</p>
+  <div class="prompt"><div class="who">규정 점검 · 노사·복무 담당</div><pre id="q1">한양대 직원 복무 규정과 최신노동복무법령 문서를 비교해서, 현행 근로기준법보다 불리하거나 개정이 필요한 조항을 [규정 조항 | 관련 법 조문 | 차이점 | 수정 제안] 표로 정리해 줘.</pre><button type="button" data-copy="q1">복사</button></div>
+  <div class="prompt"><div class="who">개정 대응 · 인사·총무</div><pre id="q2">최신노동복무법령 문서에서 '시행예정' 개정이 있는 법령을 찾아 무엇이 바뀌는지 요약하고, 한양대 규정 중 함께 고쳐야 할 조항을 찾아 줘. 시행일 순으로 정리해 줘.</pre><button type="button" data-copy="q2">복사</button></div>
+  <div class="prompt"><div class="who">계약직 판단 · 산학협력단·채용 담당</div><pre id="q3">연구과제 계약직 연구원이 과제 연장으로 근무 기간이 2년을 넘게 되면 무기계약 전환 대상이 되는지, 예외 사유에 해당하는지 최신노동복무법령 문서의 기간제법 조문과 한양대 규정을 근거로 설명해 줘.</pre><button type="button" data-copy="q3">복사</button></div>
+  <div class="prompt"><div class="who">근로장학·조교 운영 · 행정실</div><pre id="q4">주 15시간 미만으로 일하는 근로장학생·조교에게 주휴수당, 연차, 퇴직금이 적용되는지 최신노동복무법령 문서의 근거 조문과 함께 표로 정리해 줘.</pre><button type="button" data-copy="q4">복사</button></div>
+  <div class="prompt"><div class="who">문의 응대 · 복지·노동조합</div><pre id="q5">직원이 배우자 출산휴가를 며칠 쓸 수 있는지, 나눠 쓸 수 있는지 물어봤어. 최신노동복무법령 문서의 남녀고용평등법 조문과 한양대 규정을 근거로, 직원에게 보낼 3~4문장짜리 안내 문구를 써 줘.</pre><button type="button" data-copy="q5">복사</button></div>
+  <div class="prompt"><div class="who">공고문 점검 · 모든 부서</div><pre id="q6">아래 모집 공고문 초안에서 근무시간, 휴게, 임금, 계약기간 표현이 최신노동복무법령 문서(근로기준법·최저임금법·기간제법)와 한양대 규정에 어긋나는 부분이 있는지 점검하고 고친 문장을 제안해 줘.
+[공고문 붙여넣기]</pre><button type="button" data-copy="q6">복사</button></div>
+</section>
+
+<!-- 제6조 -->
+<section id="trouble">
+  <span class="art">제6조</span>
+  <h2>막힐 때 체크리스트</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>증상</th><th>확인할 것</th></tr></thead>
+    <tbody>
+      <tr><td>구글 문서에 "불러오기 실패"가 적힘</td><td>법령 이름이 정식 명칭과 똑같은지 봅니다. 띄어쓰기와 가운뎃점(ㆍ)까지 같아야 합니다. 예: <code>개인정보 보호법</code></td></tr>
+      <tr><td><code>SyntaxError: Unexpected end of input</code></td><td>코드가 중간에서 잘려 붙여넣어진 것입니다. 편집기에서 Ctrl+A → Delete로 지운 뒤, 이 페이지의 <b>코드 복사</b> 버튼으로 다시 붙여넣습니다. 맨 아래 줄이 <code>fmt_</code> 함수의 <code>}</code>로 끝나면(160번대 줄) 전부 들어간 것입니다.</td></tr>
+      <tr><td>Apps Script 권한 창에서 막힘</td><td>학교 계정은 관리자가 외부 연결을 막았을 수 있습니다. 개인 계정으로 먼저 해 봅니다.</td></tr>
+      <tr><td>"시간 초과"가 적힘</td><td>한 묶음의 법령 수를 줄입니다. 6분 실행 제한이 있습니다.</td></tr>
+      <tr><td>노트북이 바뀐 법령을 모름</td><td>소스를 <b>Google Drive에서</b> 추가했는지 봅니다. 내려받아 올린 파일은 동기화되지 않습니다.</td></tr>
+      <tr><td>안티그라비티에 Korean Law가 안 보임</td><td>먼저 안티그라비티를 <b>완전히 종료(작업 표시줄 ^ 아이콘까지) 후 다시 실행</b>합니다. 그래도 안 보이면 <code>url</code>이 아니라 <code>serverUrl</code>로 썼는지, JSON 쉼표·괄호가 맞는지 봅니다.</td></tr>
+      <tr><td>클로드에서 커넥터를 더 못 추가함</td><td>무료 계정은 맞춤 커넥터 1개까지입니다. 다른 커넥터를 지우고 Korean Law를 남깁니다.</td></tr>
+      <tr><td>AI가 뉴스나 블로그를 근거로 답함</td><td>"Korean Law 도구만 사용해서", "웹 검색은 근거로 쓰지 말고"를 프롬프트에 넣습니다.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 부칙 -->
+<section id="appendix">
+  <span class="art">부칙</span>
+  <h2>법령 API 키(선택)와 주의사항</h2>
+  <h3>법령 API 키는 지금 없어도 됩니다</h3>
+  <p>Korean Law 공개 서버는 키 없이 조회됩니다. 다만 이 서버가 멈추거나 정책이 바뀔 때를 대비해 키를 받아 두면 좋습니다.</p>
+  <ol class="steps">
+    <li><b>가입</b><a href="https://open.law.go.kr">국가법령정보 공동활용(open.law.go.kr)</a>에 회원가입합니다.</li>
+    <li><b>Open API 활용 신청</b>공동활용 메뉴에서 Open API 사용을 신청합니다. 신청할 때 쓴 <b>이메일 ID</b>(예: hong@… 의 hong)가 인증값(OC)입니다.</li>
+    <li><b>승인 확인</b>승인은 바로 되기도 하고 하루 이틀 걸리기도 합니다. 신청 화면에서 사용할 서버 IP나 도메인 등록을 요구하면 그대로 따릅니다.</li>
+    <li><b>키 넣기</b>Apps Script는 코드 맨 위 <code>OC: ''</code>에, 원격 연결은 주소 뒤에 <code>?oc=내키</code>를 붙입니다.</li>
+  </ol>
+  <div class="warn">
+    <p><b>Korean Law MCP는 법제처 공식 서비스가 아닙니다.</b> 개인 개발자가 국가법령정보센터 Open API를 바탕으로 만들어 공개한 서버입니다. 공개 법령 조회용으로만 쓰고, 내부 문서나 개인정보는 질문에 넣지 마세요.</p>
+    <p>제미나이 개인 계정의 MCP 메뉴, 각 도구의 무료 한도는 자주 바뀝니다. 연수 직전에 다시 확인하세요.</p>
+  </div>
+  <h3>출처</h3>
+  <ul class="src">
+    <li><a href="https://workspaceupdates.googleblog.com/2026/05/keep-your-sources-up-to-date-with-automatic-Drive-syncing-in-NotebookLM.html">Google Workspace Updates · NotebookLM 자동 Drive 동기화 (2026. 5.)</a></li>
+    <li><a href="https://law.go.kr/efLsPop.do?chrIdx=1">국가법령정보센터 · 시행예정 법령 목록</a> / <a href="https://law.go.kr/lsInfoP.do?lsiSeq=286083&amp;viewCls=lsRvsDocInfoR">고등교육법 법률 제21654호</a></li>
+    <li><a href="https://github.com/chrisryugj/korean-law-mcp">korean-law-mcp (GitHub)</a></li>
+    <li><a href="https://support.google.com/gemini/answer/17209137">Gemini 앱 도움말 · 맞춤 앱(MCP) 연결</a></li>
+    <li><a href="https://antigravity.google/docs/commands/schedule/">Antigravity 문서 · 예약 실행과 Automations</a></li>
+  </ul>
+</section>
+
+<footer>FlowDX · 실습 가이드 · 내용은 2026년 11월 8일 확인 기준입니다.</footer>
+</main>
+</div>
+
+<div class="wrap tabpanel" id="tab2" role="tabpanel" aria-labelledby="tb-tab2" hidden>
+<nav class="toc" aria-label="목차">
+  <b>목차</b>
+  <a href="#ag-connect">제1장 Korean Law 연결하기</a>
+  <a href="#ag-why">제2장 왜 폴더가 아니라 MCP인가</a>
+  <a href="#ag-make">제3장 내 규정 MCP 만들기</a>
+</nav>
+<main>
+<header class="hero">
+  <div class="eyebrow">HANYANG Gemini Academy · 교직원 실습 가이드 · 안티그라비티 편</div>
+  <h1>안티그라비티에<br>법령과 우리 규정을 연결하기</h1>
+  <p class="lead">설치형 AI인 안티그라비티에 <b>최신 법령(Korean Law MCP)</b>을 연결하고, 이어서 <b>우리 규정을 담은 나만의 MCP</b>를 만들어 함께 부르는 실습입니다. 무료 개인 계정으로 할 수 있습니다.</p>
+</header>
+
+<section id="ag-connect">
+  <span class="art">제1장</span>
+  <h2>Korean Law 연결하기</h2>
+  <p>설정 파일을 직접 고치지 않고, <b>에이전트에게 채팅으로 연결을 부탁</b>합니다. 주소 한 줄만 붙여넣으면 됩니다.</p>
+  <ol class="steps">
+    <li><b>설치·로그인</b><a href="https://antigravity.google">antigravity.google</a>에서 내려받아 <b>개인 구글 계정</b>으로 로그인합니다.</li>
+    <li><b>설정 파일 경로 복사</b>왼쪽 <b>Customizations</b> → 오른쪽 위 <b>Installed</b> → 아래 <b>MCP Servers</b> 줄의 <b>+ 왼쪽 아이콘(Copy Config File Path)</b>을 누릅니다. 내 컴퓨터의 MCP 설정 파일 경로가 복사됩니다. 안티그라비티에는 주소만 넣는 입력창이 없고 이 설정 파일에 등록하는 방식이라, 이 경로를 에이전트에게 알려 줍니다.
+      <figure><img src="img/32-ag-config.png" alt="안티그라비티 Customizations 화면의 Installed 탭, 아래 MCP Servers 줄 오른쪽의 설정 파일 경로 복사 아이콘을 가리킨 화면"><figcaption>Customizations → Installed → MCP Servers 줄의 + 왼쪽 아이콘(Copy Config File Path). 지금은 MCP Servers가 0개입니다.</figcaption></figure>
+      <figure style="max-width:360px"><img src="img/33-ag-copy-icon.png" alt="MCP Servers 줄 오른쪽, + 버튼 왼쪽의 네모 두 개 겹친 아이콘에 마우스를 올리면 Copy Config File Path라는 말풍선이 뜨는 화면"><figcaption>+ 버튼 바로 왼쪽의 겹친 네모 아이콘. 마우스를 올리면 <b>Copy Config File Path</b>가 뜹니다. 누르면 경로가 복사됩니다.</figcaption></figure></li>
+    <li><b>에이전트에게 부탁하기</b><b>New Conversation</b>을 열고 아래 문장을 붙여넣은 뒤, 마지막 줄에 방금 복사한 경로를 붙여넣습니다. 위 칸에 복사한 경로를 붙여넣고 <b>프롬프트에 반영</b>을 누르면 마지막 줄의 빨간 칸이 내 경로로 바뀝니다. 그다음 <b>복사</b>해서 채팅창에 붙여넣습니다. 파일을 고쳐도 되는지 물으면 <b>허용</b>합니다.
+      <div class="card" style="margin:10px 0">
+        <label for="ag-path-in" style="font-size:14px;color:var(--muted)">복사한 설정 파일 경로를 붙여넣으세요</label>
+        <input id="ag-path-in" type="text" autocomplete="off" placeholder="C:\Users\내이름\.gemini\config\mcp_config.json" style="width:100%;margin:6px 0 10px;padding:10px 12px;font:15px var(--mono);border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+        <button type="button" id="ag-path-btn" class="toolbtn">프롬프트에 반영</button>
+        <p id="ag-path-msg" style="font-size:13px;color:var(--muted);margin:8px 0 0"></p>
+      </div>
+      <div class="prompt"><div class="who">에이전트 채팅창에 붙여넣기</div><pre id="ag-ask">아래 원격 MCP 서버를 내 안티그라비티 MCP 설정에 추가해 줘.
+- 이름: korean-law
+- 주소: https://korean-law-mcp.fly.dev/mcp
+원격 서버라서 serverUrl 항목으로 넣어 줘. 다른 서버 설정은 건드리지 마.
+- 설정 파일 경로: <span class="ph" id="ag-path">(여기에 Copy Config File Path로 복사한 경로 붙여넣기)</span></pre><button type="button" data-copy="ag-ask">복사</button></div>
+      <figure><img src="img/34-ag-prompt.png" alt="안티그라비티 새 대화 입력창에 MCP 추가 프롬프트를 붙여넣은 화면. 마지막 줄에 복사한 설정 파일 경로가 들어가 있다"><figcaption>새 대화 입력창에 붙여넣은 모습. 마지막 줄(파란 상자)에 내 설정 파일 경로가 들어갔는지 확인하고 보내기(→)를 누릅니다.</figcaption></figure>
+      <details class="reveal"><summary>권한을 묻는 창이 뜨면 · 권한 모드 설명 (캡처 보기)</summary>
+        <p>에이전트가 설정 파일을 읽고 고치려고 <b>Allow read access to this path?</b>처럼 허락을 구합니다. 경로가 <code>.gemini/config/mcp_config.json</code>인지 확인하고 <b>1 Yes, allow this time</b>을 고른 뒤 <b>Submit</b>을 누릅니다. 이어서 쓰기(수정) 허락을 물으면 같은 방법으로 한 번 더 허용합니다.</p>
+        <figure><img src="img/35-ag-allow.png" alt="안티그라비티 에이전트가 mcp_config.json 파일 읽기 권한을 묻는 창. 1번 Yes, allow this time이 선택되어 있다"><figcaption>읽기 권한 요청 창. 이번만 허용(1번)이면 충분합니다.</figcaption></figure>
+        <p><b>권한 요청이 너무 자주 뜬다면</b> 입력창 아래의 방패 아이콘(<b>Default</b>)을 눌러 모드를 바꿀 수 있습니다.</p>
+        <figure style="max-width:520px"><img src="img/36-ag-modes.png" alt="안티그라비티 입력창 아래 권한 모드 메뉴. Request Review, Default, Auto (Preview), Turbo 네 가지가 있고 Default에 체크되어 있다"><figcaption>입력창 아래 방패 아이콘을 누르면 나오는 권한 모드 메뉴</figcaption></figure>
+        <table>
+          <thead><tr><th>모드</th><th>화면 설명</th><th>쉽게 말하면</th><th>이럴 때</th></tr></thead>
+          <tbody>
+            <tr><td>Request Review</td><td>Every command requires approval.</td><td>모든 명령마다 허락을 받음</td><td>처음 써 봐서 하나하나 보고 싶을 때</td></tr>
+            <tr><td><b>Default</b> (기본)</td><td>Ask before sensitive operations.</td><td>파일 읽기·수정처럼 민감한 일만 물어봄</td><td><b>연수 권장.</b> 오늘 실습은 이 모드로 충분</td></tr>
+            <tr><td>Auto (Preview)</td><td>Automatically decide if commands run.</td><td>실행해도 될지 에이전트가 스스로 판단</td><td>권한 창이 번거로울 때. 아직 미리보기(시험) 기능</td></tr>
+            <tr><td>Turbo</td><td>Run all commands without restrictions.</td><td>묻지 않고 모든 명령을 실행</td><td>업무 PC에서는 쓰지 않기</td></tr>
+          </tbody>
+        </table>
+        <p class="note">학교 업무 PC에는 개인정보와 업무 파일이 있습니다. 에이전트가 무엇을 고치는지 볼 수 있도록 <b>Default</b>를 그대로 두고, 권한 창이 뜨면 경로를 읽어 본 뒤 허용하세요. 바꿨다면 실습이 끝난 뒤 다시 Default로 돌려 두세요.</p>
+      </details></li>
+    <li><b>연결 확인</b>에이전트가 1분쯤 일한 뒤 <b>mcp_config.json에 korean-law를 추가했습니다</b>라고 답하고, 적용된 설정(<code>"serverUrl": "https://korean-law-mcp.fly.dev/mcp"</code>)과 <b>1 file changed</b>를 보여 주면 성공입니다.
+      <figure><img src="img/37-ag-done.png" alt="안티그라비티 에이전트가 mcp_config.json에 korean-law 원격 MCP 서버 설정을 추가했다고 답하고, serverUrl이 들어간 json과 1 file changed +5 -1을 보여 주는 화면"><figcaption>에이전트의 완료 답변. 적용된 설정에 serverUrl 주소가 보이면 됩니다(실측 약 51초).</figcaption></figure>
+      그다음 <b>안티그라비티를 완전히 껐다가 다시 켭니다.</b> 설정 파일이 바뀌어도 열려 있는 화면에는 바로 반영되지 않습니다(이 화면에는 새로고침 버튼이 없습니다).
+      <ol class="sub">
+        <li>창 오른쪽 위 ✕로 닫습니다.</li>
+        <li>작업 표시줄 오른쪽 아래 <b>^</b>(숨겨진 아이콘)에 안티그라비티가 남아 있으면 오른쪽 클릭 → 종료합니다.</li>
+        <li>안티그라비티를 다시 실행합니다. 업데이트 알림이 떠 있으면 업데이트해도 됩니다(업데이트하면서 다시 켜집니다).</li>
+      </ol>
+      <b>Customizations → Installed → MCP Servers</b>가 <b>1</b>이 되고 <b>korean-law ● 10 tools enabled</b>가 보이면 연결 완료입니다.
+      <figure><img src="img/38-ag-connected.png" alt="안티그라비티 Customizations Installed 화면 아래쪽 MCP Servers가 1이고 korean-law 옆에 초록 점과 10 tools enabled가 표시된 화면"><figcaption>다시 켠 뒤의 화면. 초록 점은 서버에 연결됐다는 뜻이고, 10 tools는 법령 검색·조문 조회 같은 도구 개수입니다.</figcaption></figure></li>
+    <li><b>바로 써 보기</b>"korean-law로 근로기준법 시행예정 개정을 알려줘"처럼 물어봅니다.</li>
+  </ol>
+  <details class="reveal"><summary>에이전트가 못 고칠 때: 직접 붙여넣는 방법</summary>
+    <p>윈도우 키+R → 복사한 경로 붙여넣기 → 확인을 누르면 <code>mcp_config.json</code>이 열립니다(메모장으로 열기를 고르세요). 아래 내용을 붙여넣어 저장합니다. 이미 다른 서버가 있으면 <code>"korean-law": {...}</code> 부분만 <code>mcpServers</code> 안에 추가합니다.</p>
+    <div class="copybox"><span class="lbl">mcp_config.json</span><button type="button" data-copy="ag-json">복사</button><pre id="ag-json">{
+  "mcpServers": {
+    "korean-law": {
+      "serverUrl": "https://korean-law-mcp.fly.dev/mcp"
+    }
+  }
+}</pre></div>
+  </details>
+
+</section>
+
+<section id="ag-why">
+  <span class="art">제2장</span>
+  <h2>왜 폴더가 아니라 MCP인가</h2>
+  <p>규정 파일이 내 PC에 있으니 "폴더를 열어서 물어보면 되지 않나?" 싶을 수 있습니다. 한두 번 볼 자료라면 그래도 됩니다. 하지만 매일 쓰는 규정이라면 MCP로 만들어 두는 편이 낫습니다.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>폴더 연결</th><th>내 규정 MCP</th></tr></thead>
+    <tbody>
+      <tr><td>쓰는 곳</td><td>그 폴더를 연 프로젝트에서만</td><td><b>어느 대화에서든</b> (공용 설정)</td></tr>
+      <tr><td>찾는 방식</td><td>에이전트가 매번 PDF·HWP를 읽고 뒤짐</td><td>한 번 정리해 둔 조문을 <b>조 번호로 정확히</b> 가져옴</td></tr>
+      <tr><td>답의 일관성</td><td>읽을 때마다 다르게 해석할 수 있음</td><td>같은 질문에는 같은 조문 원문</td></tr>
+      <tr><td>속도·분량</td><td>규정이 많으면 느리고, 다 못 읽기도 함</td><td>필요한 조문만 가져와 빠름</td></tr>
+      <tr><td>안전</td><td>에이전트가 파일을 고칠 수도 있음</td><td><b>읽기 전용 도구</b>만 열어 둠</td></tr>
+      <tr><td>다른 AI</td><td>안티그라비티 프로젝트에서만</td><td>같은 서버를 클로드 데스크톱 등에도 연결</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>규정 서랍에 색인을 붙이는 일입니다.</b> 폴더 연결은 서류 뭉치를 통째로 건네는 것이고, MCP는 "몇 조 주세요" 하면 그 조문만 꺼내 주는 창구입니다.</li>
+    <li><b>나중에 갈아끼우기만 하면 됩니다.</b> 학교에서 공식 규정 MCP를 제공하면 내 MCP 자리에 그 주소만 바꿔 넣습니다. 스킬과 업무 방식은 그대로입니다.</li>
+    <li><b>MCP가 무엇인지 직접 보게 됩니다.</b> Korean Law도 누군가 법령을 이렇게 도구로 만들어 둔 것입니다. 어떤 업무 자료든 같은 방법으로 AI에 연결할 수 있습니다.</li>
+  </ul>
+  <p class="note">폴더 연결이 더 나은 경우도 있습니다. 한두 번 보고 말 자료이거나, 아직 고치고 있는 초안이라 내용이 자주 바뀔 때입니다.</p>
+</section>
+
+<section id="ag-make">
+  <span class="art">제3장</span>
+  <h2>내 규정 MCP 만들기 <span class="pill paid">준비 중</span></h2>
+  <div class="card" style="margin:12px 0 16px">
+    <p style="margin:0 0 6px"><b>실습 폴더 내려받기</b></p>
+    <p style="margin:0 0 12px;font-size:15px;color:var(--muted)">한양대 규정을 분야별 텍스트 파일 18개로 모은 폴더입니다(압축 약 0.9MB). 압축을 풀면 생기는 <b>한양대규정모음</b> 폴더를 <code>C:\</code> 바로 아래로 옮겨 <code>C:\한양대규정모음</code>이 되게 합니다.</p>
+    <a class="toolbtn" href="files/hanyang-reg.zip" download="한양대규정모음.zip" style="display:inline-block;text-decoration:none">⬇ 한양대규정모음.zip 내려받기</a>
+  </div>
+  <p>실습 내용을 시험하는 중입니다. 확인이 끝나면 이곳에 단계별 안내와 캡처를 넣습니다.</p>
+  <ol>
+    <li>위 실습 폴더를 내려받아 <code>C:\한양대규정모음</code>에 압축 풀기</li>
+    <li>에이전트에게 "이 폴더의 규정으로 MCP 서버를 만들어 줘"라고 부탁하기</li>
+    <li>설정 파일에 hanyang-reg로 등록하고 다시 켜기 → MCP Servers 2개 확인</li>
+    <li>두 MCP를 함께 부르는 <code>/규정대조</code> 스킬 만들기</li>
+  </ol>
+</section>
+
+<footer>FlowDX · 실습 가이드 · 내용은 2026년 11월 8일 확인 기준입니다.</footer>
+</main>
+</div>
+
+<script>
+document.querySelectorAll('button[data-copy]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var el = document.getElementById(btn.getAttribute('data-copy'));
+    var text = el ? el.innerText : '';
+    var label = btn.textContent;
+    function done(ok){ btn.textContent = ok ? '복사됨' : '직접 선택해 복사하세요'; setTimeout(function(){ btn.textContent = label; }, 1600); }
+    try {
+      navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ selectEl(el); done(false); });
+    } catch(e){ selectEl(el); done(false); }
+  });
+});
+(function(){
+  var input=document.getElementById('doc-link'), out=document.getElementById('doc-id'), msg=document.getElementById('doc-msg');
+  var current='';
+  function extract(s){ var m=String(s||'').match(/\/d\/([A-Za-z0-9_-]{20,})/); if(m) return m[1]; s=String(s||'').trim(); return /^[A-Za-z0-9_-]{20,}$/.test(s)?s:''; }
+  function update(){
+    current=extract(input.value);
+    if(!input.value.trim()){ out.textContent='링크를 붙여넣으면 여기에 나타납니다'; msg.textContent=''; return; }
+    if(current){ out.textContent=current; msg.textContent='문서 ID를 찾았습니다.'; }
+    else { out.textContent='찾지 못했습니다'; msg.textContent='링크에 /d/ 가 들어 있는지 확인하세요. 문서 주소창의 링크를 통째로 복사해 붙여넣으면 됩니다.'; }
+  }
+  input.addEventListener('input',update);
+  function copy(text,btn){
+    var label=btn.textContent;
+    if(!text){ msg.textContent='먼저 링크를 붙여넣으세요.'; return; }
+    try{ navigator.clipboard.writeText(text).then(function(){btn.textContent='복사됨';setTimeout(function(){btn.textContent=label;},1500);},function(){selectEl(out);msg.textContent='자동 복사가 막혀 ID를 선택해 두었습니다. Ctrl+C로 복사하세요.';}); }
+    catch(e){ selectEl(out); msg.textContent='자동 복사가 막혀 ID를 선택해 두었습니다. Ctrl+C로 복사하세요.'; }
+  }
+  document.getElementById('copy-id').addEventListener('click',function(){copy(current,this);});
+  document.getElementById('insert-id').addEventListener('click',function(){
+    var ph=document.getElementById('ph');
+    if(!current){ msg.textContent='먼저 문서 링크를 붙여넣으세요.'; return; }
+    ph.textContent=current; ph.classList.add('filled');
+    msg.textContent='아래 코드의 빨간 칸에 ID를 넣었습니다. 이제 코드 위 [코드 복사]를 눌러 Apps Script에 붙여넣으세요.';
+    var box=document.getElementById('code-gs'); try{ ph.scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){ box.scrollIntoView(); }
+  });
+})();
+(function(){
+  var P={
+    labor:{title:'노동·복무 법령',hour:6,doc:'최신노동복무법령',proj:'노동법령자동갱신',laws:['근로기준법','최저임금법','남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률','기간제 및 단시간근로자 보호 등에 관한 법률']},
+    corp:{title:'법인·교원 법령',hour:7,doc:'최신법인교원법령',proj:'법인교원법령자동갱신',laws:['사립학교법','사립학교법 시행령']},
+    academic:{title:'학사·등록금 법령',hour:5,doc:'최신학사등록금법령',proj:'학사등록금법령자동갱신',laws:['고등교육법','고등교육법 시행령','대학 등록금에 관한 규칙']}
+  };
+  function apply(k){
+    var c=P[k]; if(!c) return;
+    document.getElementById('ph-title').textContent="'"+c.title+"'";
+    document.getElementById('ph-hour').textContent=String(c.hour);
+    document.getElementById('ph-laws').textContent=c.laws.map(function(x,i){return "    '"+x+"'"+(i<c.laws.length-1?',':'');}).join('\n');
+    ['ph-title','ph-hour','ph-laws'].forEach(function(id){document.getElementById(id).classList.add('preset');});
+    document.getElementById('preset-msg').innerHTML='문서 이름: <b>'+c.doc+'</b> · Apps Script 이름: <b>'+c.proj+'</b> · 매일 '+c.hour+'시 갱신';
+    document.querySelectorAll('.segbtn').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-preset')===k);});
+  }
+  document.querySelectorAll('.segbtn').forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-preset'));});});
+})();
+(function(){
+  var input=document.getElementById('doc-link2'), out=document.getElementById('doc-id2'), msg=document.getElementById('doc-msg2'), cur='';
+  function ex(s){ var m=String(s||'').match(/\/d\/([A-Za-z0-9_-]{20,})/); if(m) return m[1]; s=String(s||'').trim(); return /^[A-Za-z0-9_-]{20,}$/.test(s)?s:''; }
+  input.addEventListener('input',function(){
+    cur=ex(input.value);
+    if(!input.value.trim()){ out.textContent='링크를 붙여넣으면 여기에 나타납니다'; msg.textContent=''; return; }
+    if(cur){ out.textContent=cur; msg.textContent='문서 ID를 찾았습니다.'; } else { out.textContent='찾지 못했습니다'; msg.textContent='링크에 /d/ 가 들어 있는지 확인하세요.'; }
+  });
+  document.getElementById('insert-id2').addEventListener('click',function(){
+    if(!cur){ msg.textContent='먼저 문서 링크를 붙여넣으세요.'; return; }
+    var ph=document.getElementById('ph2'); ph.textContent=cur; ph.classList.add('filled');
+    msg.textContent='코드의 빨간 칸에 ID를 넣었습니다. 이제 [코드 복사]를 누르세요.';
+    try{ ph.scrollIntoView({block:'nearest',behavior:'smooth'}); }catch(e){}
+  });
+  document.getElementById('copy-id2').addEventListener('click',function(){
+    var btn=this,l=btn.textContent; if(!cur){ msg.textContent='먼저 문서 링크를 붙여넣으세요.'; return; }
+    try{ navigator.clipboard.writeText(cur).then(function(){btn.textContent='복사됨';setTimeout(function(){btn.textContent=l;},1500);},function(){selectEl(out);}); }catch(e){ selectEl(out); }
+  });
+})();
+(function(){
+  var inp=document.getElementById('ag-path-in'), btn=document.getElementById('ag-path-btn'), msg=document.getElementById('ag-path-msg'), out=document.getElementById('ag-path');
+  if(!inp) return;
+  btn.addEventListener('click',function(){
+    var v=inp.value.trim().replace(/^["']|["']$/g,'');
+    if(!v){ msg.textContent='먼저 Copy Config File Path로 복사한 경로를 붙여넣으세요.'; return; }
+    if(!/mcp_config\.json$/i.test(v)){ msg.textContent='경로가 mcp_config.json으로 끝나는지 확인하세요. 그래도 반영은 했습니다.'; }
+    else { msg.textContent='프롬프트 마지막 줄에 경로를 넣었습니다. 아래 [복사]를 눌러 채팅창에 붙여넣으세요.'; }
+    out.textContent=v; out.classList.add('filled');
+    try{ out.scrollIntoView({block:'nearest',behavior:'smooth'}); }catch(e){}
+  });
+})();
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tabbar .tab'));
+  function show(id,scroll){
+    tabs.forEach(function(t){var on=t.getAttribute('aria-controls')===id;t.classList.toggle('on',on);t.setAttribute('aria-selected',on?'true':'false');document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
+    if(scroll) try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.getAttribute('aria-controls'),true);try{history.replaceState(null,'','#'+t.getAttribute('aria-controls'))}catch(e){}});});
+  [].forEach.call(document.querySelectorAll('[data-goto-tab]'),function(b){b.addEventListener('click',function(){show(b.getAttribute('data-goto-tab'),true)});});
+  function fromHash(){var h=location.hash.slice(1);if(!h)return;var el=document.getElementById(h);if(!el)return;var panel=el.closest?el.closest('.tabpanel'):null;if(panel&&panel.hidden){show(panel.id,false);setTimeout(function(){if(el.className!=='wrap tabpanel')el.scrollIntoView()},30)}}
+  fromHash();window.addEventListener('hashchange',fromHash);
+})();
+function selectEl(el){ try{ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);}catch(e){} }
+</script>
+</body>
+</html>
