@@ -1014,7 +1014,13 @@ function fmt_(d) {
 다 만들면 직접 실행해서 세 도구가 잘 되는지 시험하고, 결과를 보여 줘.
 파이썬이 없으면 설치하지 말고 알려 줘.</pre><button type="button" data-copy="mk-ask">복사</button></div>
       <figure style="max-width:720px"><img src="img/40-ag-mk-prompt.png" alt="안티그라비티 입력창 맨 앞에 한양대규정모음 폴더가 붙어 있고, 그 뒤에 MCP 서버 만들기 프롬프트를 붙여넣은 화면"><figcaption>입력창 맨 앞에 <b>한양대규정모음</b> 폴더가 붙어 있는지 확인하고 보내기(→)를 누릅니다.</figcaption></figure>
-      권한을 물으면 내용을 확인하고 허용합니다(<a href="#ag-connect">제1장</a> 권한 모드 설명 참고). 에이전트가 시험 결과로 조문을 보여 주면 성공입니다.</li>
+      권한을 물으면 내용을 확인하고 허용합니다(<a href="#ag-connect">제1장</a> 권한 모드 설명 참고). 에이전트가 시험 결과로 조문을 보여 주면 성공입니다.
+      <details class="reveal"><summary>권한 창이 계속 뜰 때 (캡처 보기)</summary>
+        <p>에이전트는 파일 구조를 알아내려고 비슷한 파이썬 명령을 여러 번 실행합니다(어떤 태그가 있는지 → 조문 표시가 어떤 모양인지 …). <b>1 Yes, allow this time</b>은 "이번 한 번만"이라 명령마다 다시 묻습니다. Auto (Preview) 모드에서도 파이썬 실행은 계속 물었습니다.</p>
+        <p>충분히 살펴봤다 싶으면 <b>4 No</b> 칸에 아래처럼 적고 <b>Submit</b>을 누릅니다. 거절이 아니라 "다음 단계로 넘어가라"는 지시입니다.</p>
+        <div class="prompt"><div class="who">4 No 칸에 적기</div><pre id="mk-skip">같은 확인을 반복하고 있어. 지금까지 파악한 파일 구조로 바로 server.py를 만들고, 다 만든 뒤에 한 번만 시험해 줘.</pre><button type="button" data-copy="mk-skip">복사</button></div>
+        <figure><img src="img/41-ag-retry.png" alt="안티그라비티 권한 창에서 4번 No 칸에 같은 확인을 반복하고 있으니 바로 server.py를 만들라는 지시를 적은 화면"><figcaption>4번 칸에 다음 지시를 적고 Submit</figcaption></figure>
+      </details></li>
     <li><b>프롬프트 ② 등록하기</b>①을 한 <b>같은 대화</b>에 이어서 붙여넣습니다. 에이전트가 server.py가 어디 있는지 알고 있어서, 폴더 위치를 따로 적지 않아도 됩니다. 설정 파일 경로는 제1장에서 넣은 경로가 자동으로 들어갑니다. 비어 있으면 아래 칸에 다시 붙여넣으세요.
       <div class="card" style="margin:10px 0">
         <label for="ag-path-in2" style="font-size:14px;color:var(--muted)">설정 파일 경로 (Customizations → Installed → MCP Servers 줄의 Copy Config File Path)</label>
