@@ -1035,6 +1035,11 @@ function fmt_(d) {
     <li><b>프롬프트 ② 등록하기</b>①을 한 <b>같은 대화</b>에 이어서 붙여넣습니다. 에이전트가 server.py가 어디 있는지 알고 있어서, 폴더 위치를 따로 적지 않아도 됩니다. 설정 파일 경로는 제1장에서 넣은 경로가 자동으로 들어갑니다. 비어 있으면 아래 칸에 다시 붙여넣으세요.
       <div class="card" style="margin:10px 0">
         <label for="ag-path-in2" style="font-size:14px;color:var(--muted)">설정 파일 경로 (Customizations → Installed → MCP Servers 줄의 Copy Config File Path)</label>
+        <details class="reveal" style="margin:6px 0"><summary>경로는 어디서 복사하나요? (캡처 보기)</summary>
+          <p>안티그라비티 왼쪽 <b>Customizations</b> → 오른쪽 위 <b>Installed</b> → 화면 아래 <b>MCP Servers</b> 줄 오른쪽 끝 <b>+ 바로 왼쪽의 겹친 네모 아이콘(Copy Config File Path)</b>을 누르면 복사됩니다. <a href="#ag-connect">제1장</a> 2번과 같습니다.</p>
+          <figure><img src="img/32-ag-config.png" alt="Customizations Installed 화면 아래 MCP Servers 줄 오른쪽의 설정 파일 경로 복사 아이콘"><figcaption>Customizations → Installed → MCP Servers 줄</figcaption></figure>
+          <figure style="max-width:360px"><img src="img/33-ag-copy-icon.png" alt="+ 버튼 왼쪽의 Copy Config File Path 아이콘"><figcaption>+ 왼쪽 아이콘에 마우스를 올리면 Copy Config File Path가 뜹니다</figcaption></figure>
+        </details>
         <input id="ag-path-in2" class="ag-path-input" type="text" autocomplete="off" placeholder="C:\Users\내이름\.gemini\config\mcp_config.json" style="width:100%;margin:6px 0 10px;padding:10px 12px;font:15px var(--mono);border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
         <button type="button" class="toolbtn ag-path-apply">프롬프트에 반영</button>
         <p class="ag-path-msg" style="font-size:13px;color:var(--muted);margin:8px 0 0"></p>
