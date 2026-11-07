@@ -997,10 +997,10 @@ function fmt_(d) {
     <a class="toolbtn" href="https://doramge1984.github.io/hanyang_law/files/hanyang-reg.zip" download="한양대규정모음.zip" style="display:inline-block;text-decoration:none">⬇ 한양대규정모음.zip 내려받기</a>
   </div>
   <ol class="steps">
-    <li><b>C:\ 에 풀기</b>압축을 풀면 생기는 <b>한양대규정모음</b> 폴더를 <code>C:\</code> 바로 아래로 옮깁니다. <code>C:\한양대규정모음</code> 안에 <code>한양대규정_인사행정.txt</code> 같은 파일이 바로 보여야 합니다(폴더가 두 겹이면 안쪽 폴더를 옮기세요).</li>
-    <li><b>폴더 열기</b>안티그라비티에서 <code>C:\한양대규정모음</code> 폴더를 엽니다(프로젝트로 열기). 이번에는 에이전트가 이 폴더의 파일을 읽고 새 파일을 만들어야 하기 때문입니다.</li>
+    <li><b>압축 풀기</b>바탕화면 등 찾기 쉬운 곳에 압축을 풉니다. <b>한양대규정모음</b> 폴더 안에 <code>한양대규정_인사행정.txt</code> 같은 파일이 바로 보여야 합니다(폴더가 두 겹이면 안쪽 폴더를 씁니다).</li>
+    <li><b>폴더 열기</b>안티그라비티에서 <b>한양대규정모음</b> 폴더를 엽니다(프로젝트로 열기). 이번에는 에이전트가 이 폴더의 파일을 읽고 새 파일을 만들어야 하기 때문입니다. ①과 ②는 이 폴더를 연 <b>같은 대화</b>에서 이어서 합니다.</li>
     <li><b>프롬프트 ① MCP 서버 만들기</b>폴더를 연 대화에 붙여넣습니다. 파일 형식은 알려 주지 않고, 에이전트가 직접 살펴보게 합니다.
-      <div class="prompt"><div class="who">C:\한양대규정모음 폴더를 연 대화에 붙여넣기</div><pre id="mk-ask">이 폴더의 파일들을 먼저 살펴보고 구조를 파악해 줘.
+      <div class="prompt"><div class="who">한양대규정모음 폴더를 연 대화에 붙여넣기</div><pre id="mk-ask">이 폴더의 파일들을 먼저 살펴보고 구조를 파악해 줘.
 그다음 이 규정을 조문 단위로 찾아 주는 MCP 서버를 만들어 줘.
 - 언어: 파이썬. 추가 설치 없이 기본 기능만 써서, stdio 방식으로 만들어 줘.
 - 파일 이름: server.py (이 폴더에 저장)
@@ -1012,16 +1012,16 @@ function fmt_(d) {
 다 만들면 직접 실행해서 세 도구가 잘 되는지 시험하고, 결과를 보여 줘.
 파이썬이 없으면 설치하지 말고 알려 줘.</pre><button type="button" data-copy="mk-ask">복사</button></div>
       권한을 물으면 내용을 확인하고 허용합니다(<a href="#ag-connect">제1장</a> 권한 모드 설명 참고). 에이전트가 시험 결과로 조문을 보여 주면 성공입니다.</li>
-    <li><b>프롬프트 ② 등록하기</b>새 대화에 붙여넣습니다. 설정 파일 경로는 제1장에서 넣은 경로가 자동으로 들어갑니다. 비어 있으면 아래 칸에 다시 붙여넣으세요.
+    <li><b>프롬프트 ② 등록하기</b>①을 한 <b>같은 대화</b>에 이어서 붙여넣습니다. 에이전트가 server.py가 어디 있는지 알고 있어서, 폴더 위치를 따로 적지 않아도 됩니다. 설정 파일 경로는 제1장에서 넣은 경로가 자동으로 들어갑니다. 비어 있으면 아래 칸에 다시 붙여넣으세요.
       <div class="card" style="margin:10px 0">
         <label for="ag-path-in2" style="font-size:14px;color:var(--muted)">설정 파일 경로 (Customizations → Installed → MCP Servers 줄의 Copy Config File Path)</label>
         <input id="ag-path-in2" class="ag-path-input" type="text" autocomplete="off" placeholder="C:\Users\내이름\.gemini\config\mcp_config.json" style="width:100%;margin:6px 0 10px;padding:10px 12px;font:15px var(--mono);border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
         <button type="button" class="toolbtn ag-path-apply">프롬프트에 반영</button>
         <p class="ag-path-msg" style="font-size:13px;color:var(--muted);margin:8px 0 0"></p>
       </div>
-      <div class="prompt"><div class="who">새 대화에 붙여넣기</div><pre id="reg-ask">아래 MCP 서버를 내 안티그라비티 MCP 설정에 추가해 줘.
+      <div class="prompt"><div class="who">같은 대화에 이어서 붙여넣기</div><pre id="reg-ask">방금 만든 server.py를 내 안티그라비티 MCP 설정에 추가해 줘.
 - 이름: hanyang-reg
-- 실행 파일: C:\한양대규정모음\server.py (파이썬 stdio 방식 MCP 서버)
+- 실행 파일: 이 폴더의 server.py (전체 경로로 넣어 줘)
 - 설정 파일 경로: <span class="ph ag-path-fill">(여기에 Copy Config File Path로 복사한 경로 붙여넣기)</span>
 순서
 1. 이 PC에서 파이썬이 실행되는지 확인해 줘(python --version, 안 되면 py --version).
@@ -1039,12 +1039,12 @@ function fmt_(d) {
     <p>①에서 에이전트가 서버를 끝내 완성하지 못하거나 시험에서 계속 오류가 나면, 강사가 만든 완성본을 씁니다.</p>
     <p><a class="toolbtn" href="https://doramge1984.github.io/hanyang_law/files/hanyang-reg-kit.zip" download="hanyang-reg-완성본.zip" style="display:inline-block;text-decoration:none">⬇ hanyang-reg-완성본.zip 내려받기</a></p>
     <ol>
-      <li>압축을 풀면 생기는 <b>완성본</b> 폴더를 <code>C:\한양대규정모음</code> 안에 넣습니다. → <code>C:\한양대규정모음\완성본\server.py</code></li>
-      <li>위 ② 프롬프트의 실행 파일 줄을 <code>C:\한양대규정모음\완성본\server.py</code>로 바꿔 보냅니다. 아래 버튼으로 바꾼 프롬프트를 바로 복사할 수 있습니다.</li>
+      <li>압축을 풀면 생기는 <b>완성본</b> 폴더를 <b>한양대규정모음</b> 폴더 안에 넣습니다. → <code>한양대규정모음\완성본\server.py</code></li>
+      <li>한양대규정모음 폴더를 연 대화에 아래 프롬프트를 보냅니다.</li>
     </ol>
-    <div class="prompt"><div class="who">새 대화에 붙여넣기 (완성본용)</div><pre id="reg-ask-kit">아래 MCP 서버를 내 안티그라비티 MCP 설정에 추가해 줘.
+    <div class="prompt"><div class="who">한양대규정모음 폴더를 연 대화에 붙여넣기 (완성본용)</div><pre id="reg-ask-kit">이 폴더의 완성본\server.py를 내 안티그라비티 MCP 설정에 추가해 줘.
 - 이름: hanyang-reg
-- 실행 파일: C:\한양대규정모음\완성본\server.py (파이썬 stdio 방식 MCP 서버)
+- 실행 파일: 이 폴더의 완성본\server.py (전체 경로로 넣어 줘)
 - 설정 파일 경로: <span class="ph ag-path-fill">(여기에 Copy Config File Path로 복사한 경로 붙여넣기)</span>
 순서
 1. 이 PC에서 파이썬이 실행되는지 확인해 줘(python --version, 안 되면 py --version).
@@ -1053,7 +1053,7 @@ function fmt_(d) {
     <p>완성본의 도구 이름: <code>list_regulations</code>(규정 목록), <code>search_regulation</code>(낱말로 조문 찾기), <code>get_article</code>(조문 원문, "부칙"이면 최근 부칙).</p>
   </details>
   <details class="reveal"><summary>에이전트가 설정 파일을 못 고칠 때: 직접 붙여넣는 방법</summary>
-    <p>제1장처럼 설정 파일(<code>mcp_config.json</code>)을 메모장으로 열고, <code>mcpServers</code> 안에 아래 부분을 추가합니다. korean-law 줄 끝 <code>}</code> 뒤에 쉼표(<code>,</code>)를 넣는 것을 잊지 마세요. 파이썬이 <code>py</code>로만 실행되면 <code>"python"</code>을 <code>"py"</code>로 바꿉니다.</p>
+    <p>제1장처럼 설정 파일(<code>mcp_config.json</code>)을 메모장으로 열고, <code>mcpServers</code> 안에 아래 부분을 추가합니다. korean-law 줄 끝 <code>}</code> 뒤에 쉼표(<code>,</code>)를 넣는 것을 잊지 마세요. 파이썬이 <code>py</code>로만 실행되면 <code>"python"</code>을 <code>"py"</code>로 바꿉니다. <code>args</code>의 경로는 내 server.py 위치로 바꿉니다(파일 탐색기 주소창에서 복사, <code>\</code>는 두 번씩).</p>
     <div class="copybox"><span class="lbl">mcp_config.json (전체 예시)</span><button type="button" data-copy="reg-json">복사</button><pre id="reg-json">{
   "mcpServers": {
     "korean-law": {
@@ -1061,7 +1061,7 @@ function fmt_(d) {
     },
     "hanyang-reg": {
       "command": "python",
-      "args": ["C:\\한양대규정모음\\server.py"]
+      "args": ["C:\\Users\\내이름\\Desktop\\한양대규정모음\\server.py"]
     }
   }
 }</pre></div>
@@ -1114,8 +1114,8 @@ function fmt_(d) {
       교원 문의도 해 보세요. 예: <code>/reg-law-check 교원 휴직 기간이 사립학교법과 맞는지 봐 줘.</code></li>
   </ol>
   <details class="reveal"><summary>정 안 되면: 완성본 스킬 설치하기</summary>
-    <p>제3장 토글의 <b>hanyang-reg-완성본.zip</b> 안에 강사가 만든 스킬(<code>reg-law-check\SKILL.md</code>)이 들어 있습니다. <code>C:\한양대규정모음\완성본</code>에 풀어 두었다면 아래 프롬프트를 보냅니다.</p>
-    <div class="prompt"><div class="who">새 대화에 붙여넣기</div><pre id="skill-ask">C:\한양대규정모음\완성본\reg-law-check 폴더를 안티그라비티 전역(Global) 스킬 폴더에 그대로 복사해 줘.
+    <p>제3장 토글의 <b>hanyang-reg-완성본.zip</b> 안에 강사가 만든 스킬(<code>reg-law-check\SKILL.md</code>)이 들어 있습니다. <code>한양대규정모음\완성본</code>에 풀어 두었다면, 그 폴더를 연 대화에 아래 프롬프트를 보냅니다.</p>
+    <div class="prompt"><div class="who">한양대규정모음 폴더를 연 대화에 붙여넣기</div><pre id="skill-ask">이 폴더의 완성본\reg-law-check 폴더를 안티그라비티 전역(Global) 스킬 폴더에 그대로 복사해 줘.
 전역 스킬 폴더 위치를 확인해서 알려 주고, 복사한 뒤 SKILL.md가 들어갔는지 확인해 줘.
 이미 reg-law-check가 있으면 이 내용으로 바꿔 줘.</pre><button type="button" data-copy="skill-ask">복사</button></div>
     <p>완성본 SKILL.md 내용:</p>
