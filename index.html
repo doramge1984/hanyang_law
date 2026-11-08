@@ -979,6 +979,20 @@ function fmt_(d) {
       <tr><td>다른 AI</td><td>안티그라비티 프로젝트에서만</td><td>같은 서버를 클로드 데스크톱 등에도 연결</td></tr>
     </tbody>
   </table></div>
+  <p><b>직접 재 본 결과</b> (같은 질문 "직원 배우자 출산휴가는 며칠이고 몇 번 나눠 쓸 수 있어?", 각각 <b>새 대화</b>에서)</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>폴더에서 직접 찾기</th><th>내 규정 MCP (개선판)</th></tr></thead>
+    <tbody>
+      <tr><td>걸린 시간</td><td>38초</td><td><b>12초</b></td></tr>
+      <tr><td>답</td><td>제22조, 20일, 3회, 120일 (정답)</td><td>제22조, 20일, 3회, 120일 (정답)</td></tr>
+      <tr><td>찾는 방법</td><td>에이전트가 검색 명령을 그때그때 짜서 실행</td><td>도구를 불러 0.1초 안에 조문 원문을 받음</td></tr>
+    </tbody>
+  </table></div>
+  <details class="reveal"><summary>두 답변 화면 보기</summary>
+    <figure><img src="img/47-ag-folder-38s.png" alt="폴더의 규정 파일에서 직접 찾게 한 답변, Worked for 38s"><figcaption>폴더에서 직접 찾기: 38초</figcaption></figure>
+    <figure><img src="img/48-ag-mcp-12s.png" alt="hanyang-reg MCP 도구로 찾은 답변, Worked for 12s"><figcaption>내 규정 MCP: 12초. 다만 "최대 4개 구간"처럼 원문에 없는 풀이를 덧붙이기도 하니 원문과 대조합니다.</figcaption></figure>
+  </details>
+  <p class="note">비교는 꼭 <b>새 대화</b>에서 하세요. 같은 대화에서 이어 물으면 AI가 앞 답의 조 번호를 보고 찾는 단계를 건너뛰어(3초) 공정한 비교가 되지 않습니다. 또 MCP 검색이 엉성하면(예: "배우자 출산휴가"로 0건) 에이전트가 결국 폴더를 직접 뒤지므로, MCP는 만든 뒤 <b>잘 찾게 다듬는 것</b>이 중요합니다(제3장 심화).</p>
   <ul>
     <li><b>규정 서랍에 색인을 붙이는 일입니다.</b> 폴더 연결은 서류 뭉치를 통째로 건네는 것이고, MCP는 "몇 조 주세요" 하면 그 조문만 꺼내 주는 창구입니다.</li>
     <li><b>나중에 갈아끼우기만 하면 됩니다.</b> 학교에서 공식 규정 MCP를 제공하면 내 MCP 자리에 그 주소만 바꿔 넣습니다. 스킬과 업무 방식은 그대로입니다.</li>
@@ -1108,7 +1122,7 @@ MCP 도구만 쓰고 터미널 명령이나 파일 읽기는 하지 마. 각각 
 3. 일상어를 규정 용어로 바꿔 찾는 표를 넣어 줘. 예: 출산휴가→출산, 휴가→청가·연가, 연차→연가, 출장비→여비, 월급→보수.
 4. 결과에서 [ARTICLE] 같은 태그는 빼고, JSON 들여쓰기 없이 짧은 글로 돌려줘.
 다 고치면 "배우자 출산휴가", "연차휴가", "출장비"로 시험해서 결과를 보여 줘.</pre><button type="button" data-copy="mk-fast">복사</button></div>
-    <p>고친 뒤 안티그라비티를 다시 열면 hanyang-reg가 <b>4 tools</b>로 바뀝니다. 강사 완성본(위 토글의 zip)에도 같은 개선이 들어 있습니다.</p>
+    <p><b>server.py를 고친 뒤에는 반드시 안티그라비티를 껐다 켜야</b> 반영됩니다(켜져 있는 서버는 예전 코드로 돌고 있음). 다시 열면 hanyang-reg가 <b>4 tools</b>로 바뀝니다. 강사 완성본(위 토글의 zip)에도 같은 개선이 들어 있습니다.</p>
   </details>
   <div class="card" style="margin:18px 0">
     <p style="margin:0 0 8px"><b>내 자료로 MCP 만들기</b></p>
