@@ -916,8 +916,18 @@ function fmt_(d) {
   <h2>시작 전 준비 (연수 전에 미리)</h2>
   <ol class="steps">
     <li><b>안티그라비티 설치</b><a href="https://antigravity.google/">antigravity.google</a>에서 윈도우용을 내려받아 설치하고, <b>개인 구글 계정(@gmail.com)</b>으로 로그인합니다.</li>
-    <li><b>파이썬 설치</b>제2장의 내 규정 MCP를 실행하는 데 씁니다. <a href="https://www.python.org/downloads/">python.org/downloads</a>에서 <b>Download Python</b>을 눌러 설치합니다. 설치 첫 화면 아래 <b>Add python.exe to PATH</b>에 <b>꼭 체크</b>합니다(가장 많이 빠뜨리는 곳).</li>
-    <li><b>파이썬 확인</b>윈도우 키 → <code>cmd</code> → <code>python --version</code> 입력 → <b>Python 3.x.x</b>가 나오면 끝입니다. 마이크로소프트 스토어가 열리면 2번에서 체크를 빠뜨린 것이니 다시 설치합니다.</li>
+    <li><b>파이썬 설치</b>제2장의 내 규정 MCP를 실행하는 데 씁니다. 안티그라비티를 설치했다면 <b>채팅창에 부탁하면 됩니다.</b> 에이전트가 윈도우 기본 설치 도구(winget)로 설치하고 PATH까지 넣어 줍니다.
+      <div class="prompt"><div class="who">안티그라비티 새 대화에 붙여넣기</div><pre id="py-install">이 PC에 파이썬이 있는지 python --version과 py --version으로 확인해 줘.
+없으면 winget install -e --id Python.Python.3.13 으로 설치하고, 설치가 끝나면 다시 확인해서 버전을 알려 줘.</pre><button type="button" data-copy="py-install">복사</button></div>
+      명령 실행 권한을 물으면 허용합니다. 설치가 끝나면 <b>안티그라비티를 ✕로 닫았다 다시 엽니다</b>(새로 들어간 PATH를 읽게 하려는 것).</li>
+    <li><b>확인</b>다시 연 뒤 같은 프롬프트를 한 번 더 보내 <b>Python 3.x.x</b>가 나오면 끝입니다.
+      <details class="reveal"><summary>채팅으로 안 될 때</summary>
+        <ul>
+          <li><b>cmd로 직접:</b> 윈도우 키 → <code>cmd</code> → <code>winget install -e --id Python.Python.3.13</code> → 끝나면 cmd를 닫았다 다시 열어 <code>python --version</code>.</li>
+          <li><b>설치 파일로:</b> <a href="https://www.python.org/downloads/">python.org/downloads</a>에서 Download Python → 첫 화면 아래 <b>Add python.exe to PATH</b>에 꼭 체크.</li>
+          <li><code>python</code>을 쳤는데 마이크로소프트 스토어가 열리면: 설정 → 앱 → 고급 앱 설정 → <b>앱 실행 별칭</b>에서 python.exe, python3.exe를 끕니다.</li>
+        </ul>
+      </details></li>
   </ol>
   <p class="note">회사·학교에서 받은 PC는 관리자 권한이 없어 설치가 막힐 수 있습니다. 미리 해 보고, 막히면 전산 담당 부서에 요청하세요. 안티그라비티 무료 요금제는 주간 사용 한도가 있으니(입력창 모델 이름 → View Usage) 연수 전에 많이 써 두지 않습니다.</p>
 </section>
